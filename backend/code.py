@@ -48,23 +48,17 @@ def web_out(urls, model_id):
 
 def pdf_out(pdf, model_id):
     loader = PyPDFLoader(pdf, extract_images=False)
-    print("PDF LOADED INTO THE LOADER")
-    pages = loader.load()
-    print("LOADING LLM BELOW")
-    
+    pages = loader.load()    
     llm = load_llm(model_id)
-    print("SPLITTING TEXT BELOW")
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=20)
     chunks = text_splitter.split_documents(pages)
     embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2")
     vectorstore = Chroma.from_documents(documents=chunks, embedding=embeddings)
-    print("PASSING FROM CHROMA DB TO PROMPT")
     reduce_template = """Write a concise summary of the following: "{context}" CONCISE SUMMARY: """
     prompt = PromptTemplate(
         template=reduce_template, 
         input_variables=["context", "question"]
     )
-    print("Reduce_chain starts here")
     reduce_chain = RetrievalQA.from_chain_type(
         llm=llm,
         retriever=vectorstore.as_retriever(), 
@@ -72,7 +66,6 @@ def pdf_out(pdf, model_id):
         chain_type_kwargs={"prompt": prompt},
         return_source_documents=False,
     )
-    print("Passing a question to chain")
     question = "Please summarize this book"
     summary = reduce_chain({'query': question})
     response = summary['result']
