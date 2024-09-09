@@ -1,0 +1,11 @@
+{
+    "manifest_version": 3,
+    "name": "Text Summarizer",
+    "version": "2.0",
+    "description": "Sends the current URL to a Flask server and displays the response.",
+    "permissions": ["activeTab"],
+    "host_permissions": ["http://localhost:5000/"],
+    "action": {
+      "default_popup": "popup.html"
+    }
+  }

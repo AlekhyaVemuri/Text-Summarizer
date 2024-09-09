@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload PDF</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Quick-Gist</h1>
+
+        <!-- Step 1: Select Model -->
+        <div id="selectModelStep" class="step">
+            <label for="modelSelect">Select Model:</label>
+            <div class="input-group">
+                <select id="modelSelect">
+                <option value="NousResearch/Llama-2-7b-chat-hf">Llama-2-7b</option>
+                <option value="microsoft/Phi-3-mini-4k-instruct">Phi-3-mini</option>
+                </select>
+            </div>
+            <button id="selectModelButton" class="button">Select Model</button>
+        </div>
+
+        <!-- Step 2: Web and PDF Summarizers -->
+        <div id="summarizersStep" class="step hidden">
+            <div id="webSummarizer">
+                <h2>Web Summarizer</h2>
+                <div class="input-group">
+                    <label for="urlInput">Enter URL:</label>
+                    <input type="text" id="urlInput" placeholder="Paste URL here">
+                </div>
+                <button id="sendUrlButton" class="button">Summarize</button>
+                <p id="responseElement"></p>
+            </div>
+
+            <div id="pdfSummarizer">
+                <h2>PDF Summarizer</h2>
+                <div class="input-group">
+                    <label for="pdfFile">Select PDF:</label>
+                    <input type="file" id="pdfFile" accept="application/pdf">
+                </div>
+                <button id="uploadPdfButton" class="button">Upload and Summarize</button>
+                <div id="progressContainer" class="progress">
+                    <div class="progress-bar">
+                        <div id="uploadProgress"></div>
+                    </div>
+                    <p id="uploadPercentage">0%</p>
+                </div>
+                <p id="fileName"></p>
+                <p id="pdfResponseElement"></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>
