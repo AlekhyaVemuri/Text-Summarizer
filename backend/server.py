@@ -4,6 +4,7 @@ from code import web_out, pdf_out
 import tempfile
 import os
 
+UPLOAD_FOLDER = r"C:\AugSamplesWork\Browser_plugins\Text_Summarization\SummarizerPluginV2F\uploads"
 app = Flask(__name__)
 CORS(app)  # This will enable CORS for all routes
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
