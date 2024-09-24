@@ -8,3 +8,4 @@ Bs4
 trl
 pydantic==1.10.9
 --upgrade accelerate
+optimum[openvino,nncf]
