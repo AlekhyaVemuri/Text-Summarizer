@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from code import web_out, pdf_out
+from code import web_out, pdf_out,pdf_query,url_query
 import tempfile
 import os
 
@@ -15,7 +15,7 @@ ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 def process_url():
     data = request.get_json()
     url = data.get('url')
-    model_id = data.get('model_id', 'NousResearch/Llama-2-7b-chat-hf')  
+    model_id = data.get('model_id', 'ov_llama_2')  
 
     if not url:
         return jsonify({'message': 'No URL provided'}), 400
@@ -31,7 +31,7 @@ def upload_pdf():
         return jsonify({"message": "No PDF file found"}), 400
     
     pdf_file = request.files['pdf']
-    model_id = request.form.get('model_id', 'NousResearch/Llama-2-7b-chat-hf')  
+    model_id = request.form.get('model_id', 'ov_llama_2')  
 
     if pdf_file.filename == '':
         return jsonify({"message": "No selected file"}), 400
@@ -41,9 +41,10 @@ def upload_pdf():
             with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as temp_pdf:
                 pdf_file.save(temp_pdf.name)
                 temp_pdf_path = temp_pdf.name
+                response_message = str(pdf_out(temp_pdf_path, model_id)) 
                 print(temp_pdf_path)
-            
-            response_message = str(pdf_out(temp_pdf_path, model_id))  
+                # response_message = str(pdf_out(temp_pdf_path, model_id)) 
+                print(temp_pdf_path) 
             
             os.remove(temp_pdf_path)
 
@@ -54,6 +55,28 @@ def upload_pdf():
 
     else:
         return jsonify({"message": "Invalid file type. Please upload a PDF."}), 400
+
+#query code for pdf starts here
+@app.route('/your_query_pdf', methods=['POST'])
+def pdf_process_query():
+    data = request.get_json()
+    model_id = request.form.get('model_id','ov_llama_2')  
+    query=data.get('query')
+    if not data:
+        return jsonify({'message':'no query provided'}),400
+    response_message=str(pdf_query(query,model_id))
+    return jsonify({'message': response_message})
+
+#query code for url starts here
+@app.route('/your_query_url', methods=['POST'])
+def url_process_query():
+    data = request.get_json()
+    model_id = request.form.get('model_id','ov_llama_2')  
+    query=data.get('query')
+    if not data:
+        return jsonify({'message':'no query provided'}),400
+    response_message=str(url_query(query,model_id))
+    return jsonify({'message': response_message})
 
 if __name__ == '__main__':
     app.run(port=5000)
