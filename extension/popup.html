@@ -8,36 +8,52 @@
 </head>
 <body>
     <div class="container">
-        <h1>Quick-Gist</h1>
-
+        <h1>Summarizer</h1>
+        
         <!-- Step 1: Select Model -->
         <div id="selectModelStep" class="step">
-            <label for="modelSelect">Select Model:</label>
+            <label for="modelSelect">Select Model :</label>
             <div class="input-group">
                 <select id="modelSelect">
-                <option value="NousResearch/Llama-2-7b-chat-hf">Llama-2-7b</option>
-                <option value="microsoft/Phi-3-mini-4k-instruct">Phi-3-mini</option>
+                    <option value="ov_llama_2">Meta Llama 2 OV</option>
+                    <option value="ov_qwen7b">Qwen 7B Instruct Model OV</option>
                 </select>
             </div>
             <button id="selectModelButton" class="button">Select Model</button>
+            <p id="selectedModelElement"></p>
+            <!-- <p id="modelSelect">selected</p> -->
         </div>
 
         <!-- Step 2: Web and PDF Summarizers -->
         <div id="summarizersStep" class="step hidden">
-            <div id="webSummarizer">
-                <h2>Summarize webpage</h2>
+            <p id="modelSelect"></p>
+            <div class="tab">
+                <button class="tablinks" id="webSummarizerButton">Web Summarizer</button>
+                <button class="tablinks" id="pdfSummarizerButton">Pdf Summarizer</button>
+                
+            </div>
+            <div id="webSummarizer" class="tabcontent">
                 <div class="input-group">
                     <label for="urlInput">Enter URL:</label>
                     <input type="text" id="urlInput" placeholder="Paste URL here">
                 </div>
                 <button id="sendUrlButton" class="button">Summarize</button>
                 <p id="responseElement"></p>
+
+                
+                <div id ="urlQuery"></div>
+                    <div class="input-group">
+                        <label for="urlQueryInput">Enter your query:</label>
+                        <input type="text" id="urlQueryInput" rows="5" cols="50" placeholder="enter your query here">
+                    </div>
+                    <button id="urlQueryButton" class="button">Answer</button>
+                    <p class="output" id="urlQueryResponseElement"></p>
+                </div>
             </div>
 
-            <div id="pdfSummarizer">
-                <h2>Summarize PDF</h2>
+            <div id="pdfSummarizer" class="tabcontent">
                 <div class="input-group">
-                    <label for="pdfFile">Select PDF:</label>
+                    <label for="pdfFile"><b> Select PDF: </b></label>
                     <input type="file" id="pdfFile" accept="application/pdf">
                 </div>
                 <button id="uploadPdfButton" class="button">Upload and Summarize</button>
@@ -49,7 +65,18 @@
                 </div>
                 <p id="fileName"></p>
                 <p id="pdfResponseElement"></p>
+
+                <div id ="pdfQuery">
+                    <div class="input-group">
+                        <label for="pdfQueryInput"><b>Enter your query:</b></label>
+                        <input type="text" id="pdfQueryInput" rows="5" cols="50" placeholder="enter your query here">
+                    </div>
+                    <button id="pdfQueryButton" class="button">Answer</button>
+                    <p class="output" id="pdfQueryResponseElement"></p>
+                </div>
             </div>
+    
+            
         </div>
     </div>
 
