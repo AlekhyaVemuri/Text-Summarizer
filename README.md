@@ -40,21 +40,29 @@ The directory contains:
      ```
 
 2. **Open the Chrome Browser:**
-   - Activate the loaded extension.
-
+   - Activate & Pin the loaded extension.
+   
 3. **Select an OpenVINO Model:**
    - Choose an OpenVINO IR format model previously converted from Huggingface.
+   - <img width="250" alt="image" src="https://github.com/user-attachments/assets/cfeb665c-4c25-45cd-8ef8-f32efab46f78">
+
 
 4. **Interact with the UI:**
-   - Choose either **Web Summarizer** or **PDF Summarizer**:
+   - Choose either **Web Summarizer** or **PDF Summarizer** post selecting one of the converted OV models:
+   - <img width="262" alt="image" src="https://github.com/user-attachments/assets/b4aed20d-2bf7-4389-a2ff-4d45cc42668e">
+
      - **Web Summarizer:**
        1. Enter the URL of the webpage to summarize.
        2. Click the "Summarize" button.
        3. After summarization, the text appears, and users can ask follow-up questions.
+          <img width="259" alt="image" src="https://github.com/user-attachments/assets/a3cff61f-1eec-4768-82de-d3e3ec1195e0">
+
      - **PDF Summarizer:**
        1. Upload a PDF file.
        2. Click "Upload & Summarize."
        3. After summarization, the text appears, and users can ask additional questions.
+          <img width="259" alt="image" src="https://github.com/user-attachments/assets/8f4a913f-ce46-4aea-b584-58a5bd707aee">
+
 
 5. **Reload the Page:**  
    - Refresh the webpage to restart the plugin.
