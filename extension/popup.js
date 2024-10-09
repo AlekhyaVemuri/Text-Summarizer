@@ -13,30 +13,35 @@ document.addEventListener('DOMContentLoaded', function() {
     const uploadProgress = document.getElementById('uploadProgress');
     const uploadPercentage = document.getElementById('uploadPercentage');
     const pdfResponseElement = document.getElementById('pdfResponseElement');
+    const pdfQueryInput = document.getElementById('pdfQueryInput');
     const pdfQueryButton=document.getElementById('pdfQueryButton');
-    const pdfQueryResponseElement = document.getElementById('pdfQueryResponseElement');
-    const webSummarizerButton = document.getElementById('webSummarizerButton');
-    const pdfSummarizerButton = document.getElementById('pdfSummarizerButton');
+    const answerListPdf = document.getElementById('answerListPdf');
+    const selectedModelElement = document.getElementById('selectedModelElement');
+    const loaderElement = document.querySelector('.loader');//loaders
+    const urlQueryInput = document.getElementById('urlQueryInput');
     const urlQueryButton=document.getElementById('urlQueryButton');
-    const urlQueryResponseElement = document.getElementById('urlQueryResponseElement');
-    const selectedModelElement = document.getElementById('selectedModel');
-
+    const answerList = document.getElementById('answerList');
+    
     // Step 1: Select Model
     selectModelButton.addEventListener('click', () => {
         const selectedModel = modelSelect.value;
-
+        
         if (!selectedModel) {
             alert('Please select a model.');
             return;
         }
-
-        // Hide the model selection and show the summarizers
-        selectModelStep.classList.add('hidden');
-        summarizersStep.classList.remove('hidden');
-        selectedModelElement.textContent = `Selected model: ${selectedModel}`;
+        const modelName=selectedModel;
+        if (modelName) {
+            selectedModelElement.textContent = `Selected model: ${modelName}`;
+          } else {
+            console.error('Could not find the model name.');
+          }
         
+        // Hide the model selection and show the summarizers
+            selectModelStep.classList.add('hidden');
+            summarizersStep.classList.remove('hidden');
     });
-
+ 
     // Step 2: Web Summarizer
     sendUrlButton.addEventListener('click', () => {
         const url = urlInput.value;
@@ -44,18 +49,22 @@ document.addEventListener('DOMContentLoaded', function() {
             responseElement.textContent = 'Please enter a valid URL.';
             return;
         }
-
+        
         fetch('http://localhost:5000/process-url', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ url: url })
+            body: JSON.stringify({ url: url })   
         })
+        
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
+            urlQueryButton.classList.remove('hidden') ;
+            urlQueryInput.classList.remove('hidden');
+     
             return response.json();
         })
         .then(data => {
@@ -64,9 +73,8 @@ document.addEventListener('DOMContentLoaded', function() {
         .catch(error => {
             responseElement.textContent = 'Error: ' + error.message;
         });
-        
     });
-
+ 
     // Step 2: PDF Summarizer
     uploadPdfButton.addEventListener('click', () => {
         const file = pdfFileInput.files[0];
@@ -96,6 +104,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     const response = JSON.parse(xhr.responseText);
                     pdfResponseElement.textContent = response.message || 'Upload successful';
                     fileNameElement.textContent = `Uploaded File: ${file.name}`;
+                    pdfQueryButton.classList.remove('hidden');
+                    pdfQueryInput.classList.remove('hidden');
                 } else {
                     pdfResponseElement.textContent = 'Upload failed. Please try again.';
                 }
@@ -112,75 +122,87 @@ document.addEventListener('DOMContentLoaded', function() {
             pdfResponseElement.textContent = 'Please select a valid PDF file.';
         }
     });
-    //functionality for url query input
-    urlQueryButton.addEventListener('click', () => {
-        const query = urlQueryInput.value;
-    
-        if (query.trim() === "") {
-            urlQueryResponseElement.textContent = 'Please enter a valid query.';
-            return;
-        }
-    
-        fetch('http://localhost:5000/your_query_url', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ query: query })
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            urlQueryResponseElement.textContent = data.message || 'No response from server';
-        })
-        .catch(error => {
-            urlQueryResponseElement.textContent = 'Error: ' + error.message;
-        });
-    });
-    //functionality for pdf query input
-    pdfQueryButton.addEventListener('click', () => {
-        const query = pdfQueryInput.value;
-    
-        if (query.trim() === "") {
-            pdfQueryResponseElement.textContent = 'Please enter a valid query.';
-            return;
-        }
-    
-        fetch('http://localhost:5000/your_query_pdf', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ query: query })
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            pdfQueryResponseElement.textContent = data.message || 'No response from server';
-        })
-        .catch(error => {
-            pdfQueryResponseElement.textContent = 'Error: ' + error.message;
-        });
-    });
 
     
+    //url query part
+
+    async function fetchAnswer(query) {
+        const response = await fetch('http://localhost:5000/your_query_url', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ query: query })
+        });
+      
+        if (!response.ok) {
+          throw new Error('Error fetching answer: ' + response.statusText);
+        }
+        const data = await response.json();
+        console.log(data.message);
+        return data.message;
+      }
+      
+        urlQueryButton.addEventListener('click', async () => {
+            const query = urlQueryInput.value;
+            if (!query) {
+             return;
+            }
+      
+            try {
+            const answer = await fetchAnswer(query);
+            const questionItem = document.createElement('li');
+            questionItem.innerHTML = `<strong>Question:</strong> ${query}<br><strong>Answer:</strong> ${answer}`;
+            answerList.appendChild(questionItem);
+            urlQueryInput.value = '';
+             } catch (error) {
+                console.error(error);
+            }
+        });
+    
+    //functionality for pdf query input
+    async function fetchAnswerPdf(query) {
+        const response = await fetch('http://localhost:5000/your_query_pdf', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ query: query })
+        });
+      
+        if (!response.ok) {
+          throw new Error('Error fetching answer: ' + response.statusText);
+        }
+        const data = await response.json();
+        console.log(data.message);
+        return data.message;
+       }
+      
+        pdfQueryButton.addEventListener('click', async () => {
+            const query = pdfQueryInput.value;
+            if (!query) {
+             return;
+            }
+    
+            try {
+            const answer = await fetchAnswerPdf(query);
+            const questionItemPdf = document.createElement('li');
+            questionItemPdf.innerHTML = `<strong>Question:</strong> ${query}<br><strong>Answer:</strong> ${answer}`;
+            answerListPdf.appendChild(questionItemPdf);
+            pdfQueryInput.value = '';
+            } catch (error) {
+                console.error(error);
+            }
+        });
 
     // web Summarizer tab content
     document.getElementById('webSummarizerButton').addEventListener('click', function() {
         document.getElementById('webSummarizer').style.display = 'block';
         document.getElementById('pdfSummarizer').style.display = 'none';
     });
-
+ 
     //pdf summarizer tab content
-    
+   
     document.getElementById('pdfSummarizerButton').addEventListener('click', function() {
         document.getElementById('webSummarizer').style.display = 'none';
         document.getElementById('pdfSummarizer').style.display = 'block';
