@@ -9,28 +9,30 @@
 <body>
     <div class="container">
         <h1>Summarizer</h1>
-        
+       
         <!-- Step 1: Select Model -->
         <div id="selectModelStep" class="step">
             <label for="modelSelect">Select Model :</label>
             <div class="input-group">
                 <select id="modelSelect">
+                    <option value=" ">-----</option>
                     <option value="ov_llama_2">Meta Llama 2 OV</option>
                     <option value="ov_qwen7b">Qwen 7B Instruct Model OV</option>
                 </select>
             </div>
             <button id="selectModelButton" class="button">Select Model</button>
-            <p id="selectedModelElement"></p>
+            
             <!-- <p id="modelSelect">selected</p> -->
         </div>
-
+ 
         <!-- Step 2: Web and PDF Summarizers -->
         <div id="summarizersStep" class="step hidden">
             <p id="modelSelect"></p>
+            <p id="selectedModelElement"><b></b></p> 
             <div class="tab">
-                <button class="tablinks" id="webSummarizerButton">Web Summarizer</button>
-                <button class="tablinks" id="pdfSummarizerButton">Pdf Summarizer</button>
-                
+                <button class="tablinks" id="webSummarizerButton">Web Page</button>
+                <button class="tablinks" id="pdfSummarizerButton">PDF</button>
+               
             </div>
             <div id="webSummarizer" class="tabcontent">
                 <div class="input-group">
@@ -39,18 +41,18 @@
                 </div>
                 <button id="sendUrlButton" class="button">Summarize</button>
                 <p id="responseElement"></p>
-
+                 
+                <!-- <div class="loader"></div> -->
                 
-                <div id ="urlQuery"></div>
-                    <div class="input-group">
-                        <label for="urlQueryInput">Enter your query:</label>
-                        <input type="text" id="urlQueryInput" rows="5" cols="50" placeholder="enter your query here">
+                <div class="qna-container" class="step hidden">
+                    <div class="query-box">
+                      <input type="text" id="urlQueryInput" placeholder="enter your query here" class="step hidden">
+                      <button id="urlQueryButton" class="step hidden">Answer</button>
                     </div>
-                    <button id="urlQueryButton" class="button">Answer</button>
-                    <p class="output" id="urlQueryResponseElement"></p>
+                    <ul id="answerList"></ul>
                 </div>
             </div>
-
+ 
             <div id="pdfSummarizer" class="tabcontent">
                 <div class="input-group">
                     <label for="pdfFile"><b> Select PDF: </b></label>
@@ -66,20 +68,17 @@
                 <p id="fileName"></p>
                 <p id="pdfResponseElement"></p>
 
-                <div id ="pdfQuery">
-                    <div class="input-group">
-                        <label for="pdfQueryInput"><b>Enter your query:</b></label>
-                        <input type="text" id="pdfQueryInput" rows="5" cols="50" placeholder="enter your query here">
+                <div class="qna-container" class="step hidden"></div>
+                    <div class="query-box">
+                      <input type="text" id="pdfQueryInput" placeholder="enter your query here" class="step hidden">
+                      <button id="pdfQueryButton" class="step hidden">Answer</button>
                     </div>
-                    <button id="pdfQueryButton" class="button">Answer</button>
-                    <p class="output" id="pdfQueryResponseElement"></p>
+                    <ul id="answerListPdf"></ul>
                 </div>
-            </div>
-    
-            
+            </div>  
         </div>
-    </div>
-
-    <script src="popup.js"></script>
+    </div> 
+    <script src="popup.js" defer></script>
 </body>
 </html>
+ 
