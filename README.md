@@ -48,21 +48,23 @@ The directory contains:
 
 
 4. **Interact with the UI:**
-   - Choose either **Web Summarizer** or **PDF Summarizer** post selecting one of the converted OV models:
-   - <img width="262" alt="image" src="https://github.com/user-attachments/assets/b4aed20d-2bf7-4389-a2ff-4d45cc42668e">
+   - Choose either **Web Page** or **PDF** post selecting one of the converted OV models:
+   - <img width="263" alt="image" src="https://github.com/user-attachments/assets/022679a3-599f-43d9-9f6c-0d3ef8c94a89">
 
      - **Web Summarizer:**
        1. Enter the URL of the webpage to summarize.
        2. Click the "Summarize" button.
        3. After summarization, the text appears, and users can ask follow-up questions.
-          <img width="259" alt="image" src="https://github.com/user-attachments/assets/a3cff61f-1eec-4768-82de-d3e3ec1195e0">
+
+          <img width="262" alt="image" src="https://github.com/user-attachments/assets/91e7cd27-b097-4210-b613-c1231273c294">
+
 
      - **PDF Summarizer:**
        1. Upload a PDF file.
        2. Click "Upload & Summarize."
        3. After summarization, the text appears, and users can ask additional questions.
-          <img width="259" alt="image" src="https://github.com/user-attachments/assets/8f4a913f-ce46-4aea-b584-58a5bd707aee">
 
+          <img width="265" alt="image" src="https://github.com/user-attachments/assets/c182a42f-3f83-450a-9ec7-d48144d0ef53">
 
 5. **Reload the Page:**  
    - Refresh the webpage to restart the plugin.
