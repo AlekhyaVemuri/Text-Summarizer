@@ -4,79 +4,77 @@ from code import web_out, pdf_out,pdf_query,url_query
 import tempfile
 import os
 
-UPLOAD_FOLDER = r"C:\AugSamplesWork\Browser_plugins\Text_Summarization\SummarizerPluginV2F\uploads"
 app = Flask(__name__)
 CORS(app)  # This will enable CORS for all routes
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
-
+ 
 # URL processing code
 @app.route('/process-url', methods=['POST'])
 def process_url():
     data = request.get_json()
     url = data.get('url')
-    model_id = data.get('model_id', 'ov_llama_2')  
-
+    model_id = data.get('model_id')  
     if not url:
         return jsonify({'message': 'No URL provided'}), 400
-    
+   
     response_message = str(web_out([url], model_id))
-    
     return jsonify({"message": response_message})
-
+ 
 # PDF processing code
 @app.route('/upload-pdf', methods=['POST'])
 def upload_pdf():
     if 'pdf' not in request.files:
         return jsonify({"message": "No PDF file found"}), 400
-    
+   
     pdf_file = request.files['pdf']
-    model_id = request.form.get('model_id', 'ov_llama_2')  
-
+    model_id = request.form.get('model_id')  
+ 
     if pdf_file.filename == '':
         return jsonify({"message": "No selected file"}), 400
-
+ 
     if pdf_file and pdf_file.content_type == 'application/pdf':
         try:
             with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as temp_pdf:
                 pdf_file.save(temp_pdf.name)
                 temp_pdf_path = temp_pdf.name
-                response_message = str(pdf_out(temp_pdf_path, model_id)) 
                 print(temp_pdf_path)
-                # response_message = str(pdf_out(temp_pdf_path, model_id)) 
-                print(temp_pdf_path) 
-            
+           
+            response_message = str(pdf_out(temp_pdf_path, model_id))  
+           
             os.remove(temp_pdf_path)
-
+ 
             return jsonify({"message": response_message})
-
+ 
         except Exception as e:
             return jsonify({"message": f"Error processing PDF: {str(e)}"}), 500
-
+ 
     else:
         return jsonify({"message": "Invalid file type. Please upload a PDF."}), 400
-
+ 
 #query code for pdf starts here
 @app.route('/your_query_pdf', methods=['POST'])
 def pdf_process_query():
     data = request.get_json()
-    model_id = request.form.get('model_id','ov_llama_2')  
+    model_id = request.form.get('model_id')  
     query=data.get('query')
     if not data:
         return jsonify({'message':'no query provided'}),400
     response_message=str(pdf_query(query,model_id))
     return jsonify({'message': response_message})
-
+ 
 #query code for url starts here
 @app.route('/your_query_url', methods=['POST'])
 def url_process_query():
     data = request.get_json()
-    model_id = request.form.get('model_id','ov_llama_2')  
+    print(data)
+    model_id = request.form.get('model_id')  
     query=data.get('query')
     if not data:
         return jsonify({'message':'no query provided'}),400
     response_message=str(url_query(query,model_id))
+    print(response_message)
     return jsonify({'message': response_message})
-
+ 
 if __name__ == '__main__':
     app.run(port=5000)
+ 
