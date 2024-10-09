@@ -22,7 +22,7 @@ A Chrome plugin, built using Flask, leverages an OpenVINO backend to efficiently
      ```
 
 4. **Clone the Repository and Load the Extension:**
-   - In Chrome Developer mode, use the "Load Unpacked Extension" option to add the plugin. Refer to Chrome’s development documentation for further details.
+   - In Chrome Developer mode, use the "Load Unpacked Extension" option to add the plugin. Refer to [Chrome’s development documentation](https://developer.chrome.com/docs/extensions/get-started/tutorial/hello-world#load-unpacked) for further details.
 
 ## Sample Structure
 
