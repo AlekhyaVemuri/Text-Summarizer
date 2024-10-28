@@ -20,6 +20,8 @@ A Chrome plugin, built using Flask, leverages an OpenVINO backend to efficiently
    - Generate a token from Huggingface. For private or gated models, refer to Huggingface Hub's documentation.
    - Convert the model using `optimum-cli`:
      ```
+     mkdir models
+     cd models
      optimum-cli export openvino --model meta-llama/Llama-2-7b-chat-hf --weight-format int8 ov_llama_2
      optimum-cli export openvino --model Qwen/Qwen2-7B-Instruct --weight-format int8 ov_qwen7b
      
