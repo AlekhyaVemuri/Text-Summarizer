@@ -7,12 +7,12 @@ body {
     margin: 20px;
 }
 .container {
-    max-width: 300px;
+    max-width: 280px;
     margin: auto;
     background-color: #fff;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0);
 }
 h1 {
     text-align: center;
@@ -25,9 +25,11 @@ h1 {
 .step.hidden {
     display: none;
 }
+
 .step label {
     font-weight: bold;
 }
+
 .button {
     display: inline-block;
     padding: 10px 20px;
@@ -37,6 +39,24 @@ h1 {
     border-radius: 5px;
     cursor: pointer;
 }
+/* Spinner styles for the button */
+.button-spinner {
+    border: 3px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 3px solid #3498db;
+    width: 15px;
+    height: 15px;
+    animation: spin 1s linear infinite;
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 10px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
 .button:hover {
     background-color: #3437e3;
 }
@@ -68,6 +88,8 @@ h1 {
 }
 /* styling the tab*/
 .tab {
+    /* width: 315px;
+    height: 400px; */
     overflow: hidden;
     border: 1px solid #ccc;
     background-color: #dad8f041;
@@ -75,15 +97,16 @@ h1 {
  
   /* Style the buttons inside the tab */
   .tab button {
-    padding: 10px 20px;
+    display: inline-block;
+    padding: 10px 41.5px;
     background-color:#3437e3;
-    float:middle;
+    /* float:middle; */
     border: none;
     outline: none;
     cursor: pointer;
-    transition: 0.3s;
-    font-size: 12px;
-    color: #fff
+    /* padding: 20px 4 */
+    color: #fff;
+    height:100%
   }
  
   /* Change background color of buttons on hover */
@@ -100,41 +123,36 @@ h1 {
   .tabcontent {
     display: none;
     padding: 6px 12px;
+    /*border: 1px solid #d31717;*/
     border-top: none;
   }
+
+  .model {
+    font-weight: bold;
+  }
  
-  /* For loaders */
-  .loader {
-    border: 10px solid #f3f3f3;
-    border-radius: 50%;
-    border-top: 10px solid #3498db;
-    width: 10px;
-    height: 10px;
-    -webkit-animation: spin 2s linear infinite; /* Safari */
-    animation: spin 2s linear infinite;  
- 
-    }
- 
-    /* Safari */
-    @-webkit-keyframes spin {
-        0% { -webkit-transform: rotate(0deg); }
-        100% { -webkit-transform: rotate(360deg); }
-    }
- 
-    @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
+    
     /* for query */
     .qna-container {
         display: flex;
         flex-direction: column;
         padding: 20px;
+        /* font-weight: bold; */
       }
-      
+
       .query-box {
         margin-bottom: 10px;
       }
+
+      .qbutton {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color:#3437e3;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
       
       .answer-container {
         border: 1px solid #ccc;
