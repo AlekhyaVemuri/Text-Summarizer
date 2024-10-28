@@ -35,7 +35,7 @@ The directory contains:
 1. **Start the Flask Server:**
    - Navigate to the backend folder:
      ```
-     cd Quick-Gist/backend
+     cd Text-Summarizer/backend
      python server.py
      ```
 
