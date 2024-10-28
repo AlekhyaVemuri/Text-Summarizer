@@ -11,6 +11,8 @@ A Chrome plugin, built using Flask, leverages an OpenVINO backend to efficiently
 2. **Install Dependencies:**
    - Execute:  
      `pip install -r requirements.txt`
+   - Upgrade accelerate package
+     `pip install --upgrade accelerate`
 
 3. **Download and Convert the Huggingface Model to OpenVINO IR Format:**
    - Log in to Huggingface:  
@@ -19,6 +21,8 @@ A Chrome plugin, built using Flask, leverages an OpenVINO backend to efficiently
    - Convert the model using `optimum-cli`:
      ```
      optimum-cli export openvino --model meta-llama/Llama-2-7b-chat-hf --weight-format int8 ov_llama_2
+     optimum-cli export openvino --model Qwen/Qwen2-7B-Instruct --weight-format int8 ov_qwen7b
+     
      ```
 
 4. **Clone the Repository and Load the Extension:**
