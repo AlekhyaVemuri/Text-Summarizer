@@ -17,7 +17,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const pdfQueryButton=document.getElementById('pdfQueryButton');
     const answerListPdf = document.getElementById('answerListPdf');
     const selectedModelElement = document.getElementById('selectedModelElement');
-    const loaderElement = document.querySelector('.loader');//loaders
+    const urlfurtherq = document.getElementById('urlfurtherq');
+    const pdffurtherq = document.getElementById('pdffurtherq');
     const urlQueryInput = document.getElementById('urlQueryInput');
     const urlQueryButton=document.getElementById('urlQueryButton');
     const answerList = document.getElementById('answerList');
@@ -30,18 +31,49 @@ document.addEventListener('DOMContentLoaded', function() {
             alert('Please select a model.');
             return;
         }
-        const modelName=selectedModel;
+        selectModelButton.innerHTML=`Loading ${selectedModel} <span class="button-spinner"></span>`;
+    
+        const modelName = selectedModel;
         if (modelName) {
             selectedModelElement.textContent = `Selected model: ${modelName}`;
-          } else {
+            // selectModelButton.disabled=True;
+            
+        } else {
             console.error('Could not find the model name.');
-          }
-        
-        // Hide the model selection and show the summarizers
+            selectModelButton.disabled=True;
+            selectModelButton.innerHTML="Failed to Load"
+        }
+    
+        // Send selected model to the backend to load and compile
+        fetch('http://localhost:5000/select-model', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ model_id: modelName }),
+        })
+        .then(response => {
+            response.json()
             selectModelStep.classList.add('hidden');
             summarizersStep.classList.remove('hidden');
+        })
+        .then(data => {
+            if (data.message) {
+                console.log(data.message);
+            } else {
+                console.error('Failed to select model.');
+            }
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    
+        // Hide the model selection and show the summarizers
+        // selectModelStep.classList.add('hidden');
+        // summarizersStep.classList.remove('hidden');
     });
- 
+    
+
     // Step 2: Web Summarizer
     sendUrlButton.addEventListener('click', () => {
         const url = urlInput.value;
@@ -50,46 +82,137 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
+        sendUrlButton.disabled = true;
+        sendUrlButton.innerHTML = 'Summarizing... <span class="button-spinner"></span>';
+        responseElement.classList.add('hidden');
+        urlfurtherq.classList.add('hidden');
+        urlQueryButton.classList.add('hidden') ;
+        urlQueryInput.classList.add('hidden');
+    
         fetch('http://localhost:5000/process-url', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ url: url })   
+            body: JSON.stringify({ url: url })
         })
-        
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
-            urlQueryButton.classList.remove('hidden') ;
-            urlQueryInput.classList.remove('hidden');
-     
-            return response.json();
-        })
-        .then(data => {
-            responseElement.textContent = data.message || 'No response from server';
+    
+            // Get the reader for streaming the response
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder();
+            let receivedText = '';
+            responseElement.classList.remove('hidden');
+            responseElement.innerHTML='';
+            urlfurtherq.classList.add('hidden');
+            urlQueryButton.classList.add('hidden') ;
+            urlQueryInput.classList.add('hidden');
+    
+            // Function to read chunks of data
+            function readStream() {
+                reader.read().then(({ done, value }) => {
+                    if (done) {
+                        // Stream finished
+                        sendUrlButton.innerHTML = 'Summarize';  // Reset the button text
+                        sendUrlButton.disabled = false;
+                        urlfurtherq.classList.remove('hidden');
+                        urlQueryButton.classList.remove('hidden') ;
+                        urlQueryInput.classList.remove('hidden');
+                        return;
+                    }
+    
+                    // Decode the chunk and append to the result
+                    
+                    const chunk = decoder.decode(value, { stream: true });
+                    receivedText += chunk;
+                    console.log(chunk)
+                    responseElement.innerHTML += `${chunk}`;
+    
+                    // Continue reading the next chunk
+                    readStream();
+                }).catch(error => {
+                    console.error('Error reading stream:', error);
+                    responseElement.textContent = 'Error: ' + error.message;
+                    sendUrlButton.innerHTML = 'Summarize';  
+                    sendUrlButton.disabled = false;
+                });
+            }
+    
+            // Start reading the stream
+            readStream();
         })
         .catch(error => {
+            console.error('Error:', error);
             responseElement.textContent = 'Error: ' + error.message;
+            sendUrlButton.innerHTML = 'Summarize';  
+            sendUrlButton.disabled = false;
         });
     });
+    
  
     // Step 2: PDF Summarizer
     uploadPdfButton.addEventListener('click', () => {
         const file = pdfFileInput.files[0];
-        
-
+    
         if (file && file.type === 'application/pdf') {
             const formData = new FormData();
             formData.append('pdf', file);
-
+    
             progressContainer.style.display = 'block';
-
+    
             const xhr = new XMLHttpRequest();
             xhr.open('POST', 'http://localhost:5000/upload-pdf', true);
-
-            // Update the progress bar and percentage
+            uploadPdfButton.disabled = true;
+            uploadPdfButton.innerHTML = 'Summarizing... <span class="button-spinner"></span>';
+            pdfResponseElement.classList.add('hidden');
+    
+            let previousResponseLength = 0;
+            pdfResponseElement.innerHTML='';
+            pdfResponseElement.classList.remove('hidden');
+            pdffurtherq.classList.add('hidden')
+            pdfQueryButton.classList.add('hidden');
+            pdfQueryInput.classList.add('hidden');
+    
+            // Handle the response from the server
+            xhr.onprogress = function() {
+                const currentResponse = xhr.responseText;
+                
+                // Extract the new chunk by getting the substring from the previous response length to the current length
+                const newChunk = currentResponse.slice(previousResponseLength);
+                previousResponseLength = currentResponse.length; // Update for the next iteration
+    
+                // Append the new chunk to the response element
+                pdfResponseElement.innerHTML += newChunk;
+                
+            };
+            
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    // const response = JSON.parse(xhr.responseText);
+                    // pdfResponseElement.textContent = response.message || 'Upload successful';
+                    fileNameElement.textContent = `Uploaded File: ${file.name}`;
+                    
+                    uploadPdfButton.disabled = false;
+                    uploadPdfButton.innerHTML = 'Upload and Summarize';
+                    pdffurtherq.classList.remove('hidden')
+                    pdfQueryButton.classList.remove('hidden');
+                    pdfQueryInput.classList.remove('hidden');
+                } else {
+                    uploadPdfButton.innerHTML = 'Upload and Summarize';
+                    uploadPdfButton.disabled = false;
+                    pdfResponseElement.textContent = 'Upload failed. Please try again.';
+                }
+            };
+    
+            xhr.onerror = function() {
+                pdfResponseElement.textContent = 'Error during upload. Please try again.';
+                uploadPdfButton.innerHTML = 'Upload and Summarize';
+                uploadPdfButton.disabled = false;
+            };
+    
             xhr.upload.onprogress = function(event) {
                 if (event.lengthComputable) {
                     const percentComplete = Math.round((event.loaded / event.total) * 100);
@@ -97,36 +220,22 @@ document.addEventListener('DOMContentLoaded', function() {
                     uploadPercentage.textContent = percentComplete + '%';
                 }
             };
-
-            // Handle the response from the server
-            xhr.onload = function() {
-                if (xhr.status === 200) {
-                    const response = JSON.parse(xhr.responseText);
-                    pdfResponseElement.textContent = response.message || 'Upload successful';
-                    fileNameElement.textContent = `Uploaded File: ${file.name}`;
-                    pdfQueryButton.classList.remove('hidden');
-                    pdfQueryInput.classList.remove('hidden');
-                } else {
-                    pdfResponseElement.textContent = 'Upload failed. Please try again.';
-                }
-            };
-
-            // Handle errors
-            xhr.onerror = function() {
-                pdfResponseElement.textContent = 'Error during upload. Please try again.';
-            };
-
+    
             // Send the form data with the file
             xhr.send(formData);
         } else {
             pdfResponseElement.textContent = 'Please select a valid PDF file.';
+            uploadPdfButton.innerHTML = 'Upload and Summarize';
+            uploadPdfButton.disabled = false;
         }
     });
-
+  
+   
     
     //url query part
 
     async function fetchAnswer(query) {
+        // Replace with your actual API call or logic to fetch the answer
         const response = await fetch('http://localhost:5000/your_query_url', {
           method: 'POST',
           headers: {
@@ -151,10 +260,15 @@ document.addEventListener('DOMContentLoaded', function() {
       
             try {
             const answer = await fetchAnswer(query);
+          //alert(answer.textContent);
             const questionItem = document.createElement('li');
+            //questionItem.classList.add('question-item');
+            //questionItem.innerHTML = '<strong>Question:</strong> ${query}';
             questionItem.innerHTML = `<strong>Question:</strong> ${query}<br><strong>Answer:</strong> ${answer}`;
             answerList.appendChild(questionItem);
             urlQueryInput.value = '';
+      
+        
              } catch (error) {
                 console.error(error);
             }
@@ -162,6 +276,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     //functionality for pdf query input
     async function fetchAnswerPdf(query) {
+        // Replace with your actual API call or logic to fetch the answer
         const response = await fetch('http://localhost:5000/your_query_pdf', {
           method: 'POST',
           headers: {
@@ -186,7 +301,10 @@ document.addEventListener('DOMContentLoaded', function() {
     
             try {
             const answer = await fetchAnswerPdf(query);
+          //alert(answer.textContent);
             const questionItemPdf = document.createElement('li');
+            //questionItem.classList.add('question-item');
+            //questionItem.innerHTML = '<strong>Question:</strong> ${query}';
             questionItemPdf.innerHTML = `<strong>Question:</strong> ${query}<br><strong>Answer:</strong> ${answer}`;
             answerListPdf.appendChild(questionItemPdf);
             pdfQueryInput.value = '';
