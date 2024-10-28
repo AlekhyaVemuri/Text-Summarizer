@@ -37,9 +37,9 @@ def pre_processing(loader):
  
 def load_llm(model_id):
     if model_id=="OV Meta LLama 2":
-        model_path=<Path to ov_llama_2 folder>
+        model_path=r"<Path to ov_llama_2 folder>"
     elif model_id=="OV Qwen 7B Instruct":
-        model_path=<Path to ov_qwen7b folder>
+        model_path=r"<Path to ov_qwen7b folder>"
     else:
         print("Please select a model!")
     model = OVModelForCausalLM.from_pretrained(model_path , device='GPU')
