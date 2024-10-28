@@ -9,6 +9,7 @@ from langchain_chroma import Chroma
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.document_loaders import WebBaseLoader, PyPDFLoader
 
+global llm, nectorstore, summ_vectorstore, pdf_vectorstore
 summary_template= """Write a concise summary of the following: "{context}" CONCISE SUMMARY: """
 query_template="""Use the following pieces of context to answer the question at the end.
     If you don't know the answer, just say that you don't know, don't try to make up an answer.
@@ -22,24 +23,25 @@ query_template="""Use the following pieces of context to answer the question at 
     Helpful Answer:"""
 
 def pre_processing(loader):
+    """
+    
+    """
+    
     page_data = loader.load()
-   
-    # llm = load_llm(model_id)
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=20)
     all_splits = text_splitter.split_documents(page_data)
     embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2")
-    vectorstore = Chroma.from_documents(documents=all_splits, embedding=embeddings)
-   
-    # prompt_template = """Write a concise summary of the following: "{context}" CONCISE SUMMARY: """
-    
+    vectorstore = Chroma.from_documents(documents=all_splits, embedding=embeddings)  
     return vectorstore
 
  
 def load_llm(model_id):
-    if model_id=="ov_llama_2":
-        model_path=r"<path of the OV Llama model>"
+    if model_id=="OV Meta LLama 2":
+        model_path=<Path to ov_llama_2 folder>
+    elif model_id=="OV Qwen 7B Instruct":
+        model_path=<Path to ov_qwen7b folder>
     else:
-        model_path=r"<path of the OV Qwen model>"
+        print("Please select a model!")
     model = OVModelForCausalLM.from_pretrained(model_path , device='GPU')
     tokenizer = AutoTokenizer.from_pretrained(model_path)
     pipe=pipeline(
@@ -53,10 +55,8 @@ def load_llm(model_id):
     return llm
 
  
-def web_out(urls, model_id):
+def web_out(urls):
     loader = WebBaseLoader(urls)
-    global w_llm
-    w_llm=load_llm(model_id)
     global summ_vectorstore 
     summ_vectorstore = pre_processing(loader)
     prompt = PromptTemplate(
@@ -65,80 +65,84 @@ def web_out(urls, model_id):
     )
  
     qa_chain = RetrievalQA.from_chain_type(
-        llm=w_llm,
+        llm=llm,
         retriever=summ_vectorstore.as_retriever(),
         chain_type="stuff",
         chain_type_kwargs={"prompt": prompt},
         return_source_documents=False,
-    )     
-    question = "Please summarize the context in one paragraph of 100 words"
+    )
+    # qa_chain=pre_processing(loader, load_llm(model_id))
+    vectorstore.delete
+
+    question = "Please summarize this book"
     summary = qa_chain({'query': question})
     response = summary['result']
     summary_start = response.find("CONCISE SUMMARY:")
     concise_summary = response[summary_start + len("CONCISE SUMMARY:"):].strip()
  
     return concise_summary
+    
  
 def url_query(query,model_id):
-    wq_llm = w_llm
-    q_vectorstore=summ_vectorstore
-        
     prompt = PromptTemplate(
         template=query_template,
         input_variables=["context", "question"]
         )
     reduce_chain = RetrievalQA.from_chain_type(
-            llm=wq_llm,
-            retriever=q_vectorstore.as_retriever(),
+            llm=llm,
+            retriever=summ_vectorstore.as_retriever(),
             chain_type="stuff",
             chain_type_kwargs={"prompt": prompt},
             return_source_documents=False
         )
     summary = reduce_chain({'query': query})
+    summ_vectorstore.delete
     response = summary['result']
     summary_start = response.find("Helpful Answer:")
     concise_summary = response[summary_start + len("Helpful Answer:"):].strip()
     return concise_summary
-  
-def pdf_out(pdf, model_id):
+ 
+ 
+ 
+def pdf_out(pdf):
     loader = PyPDFLoader(pdf, extract_images=False)
-    global pdf_vectorstore, p_llm
     pdf_vectorstore=pre_processing(loader)
-    p_llm = load_llm(model_id)
  
     prompt = PromptTemplate(
         template=summary_template,
         input_variables=["context", "question"]
     )
     reduce_chain = RetrievalQA.from_chain_type(
-        llm=p_llm,
+        llm=llm,
         retriever=pdf_vectorstore.as_retriever(),
         chain_type="stuff",
         chain_type_kwargs={"prompt": prompt},
         return_source_documents=False,
     )
-    question = "Please summarize the context in one paragraph of 100 words"
+    question = "Please summarize the context in one paragraph of 60 words"
     summary = reduce_chain({'query': question})
+    vectorstore.delete
+
     response = summary['result']
     summary_start = response.find("CONCISE SUMMARY:")
     concise_summary = response[summary_start + len("CONCISE SUMMARY:"):].strip()
+    # print(concise_summary)
     return concise_summary
 
-def pdf_query(query,model_id):
-    pq_llm = p_llm
-    vectorstore = pdf_vectorstore
+def pdf_query(query):
     prompt = PromptTemplate(
         template=query_template,
         input_variables=["context", "question"]
         )
     reduce_chain = RetrievalQA.from_chain_type(
-            llm=pq_llm,
-            retriever=vectorstore.as_retriever(),
+            llm=llm,
+            retriever=pdf_vectorstore.as_retriever(),
             chain_type="stuff",
             chain_type_kwargs={"prompt": prompt},
             return_source_documents=False
         )
     summary = reduce_chain({'query': query})
+    pdf_vectorstore.delete
     response = summary['result']
     summary_start = response.find("Helpful Answer:")
     concise_summary = response[summary_start + len("Helpful Answer:"):].strip()
