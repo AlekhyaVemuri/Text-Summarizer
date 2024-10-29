@@ -6,5 +6,5 @@ sentence-transformers
 langchain_chroma
 Bs4
 trl
-pydantic==1.10.9
+pypdf
 optimum[openvino,nncf]
