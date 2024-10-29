@@ -36,7 +36,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const modelName = selectedModel;
         if (modelName) {
             selectedModelElement.textContent = `Selected model: ${modelName}`;
-            // selectModelButton.disabled=True;
             
         } else {
             console.error('Could not find the model name.');
@@ -67,10 +66,6 @@ document.addEventListener('DOMContentLoaded', function() {
         .catch((error) => {
             console.error('Error:', error);
         });
-    
-        // Hide the model selection and show the summarizers
-        // selectModelStep.classList.add('hidden');
-        // summarizersStep.classList.remove('hidden');
     });
     
 
@@ -171,7 +166,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
             let previousResponseLength = 0;
             pdfResponseElement.innerHTML='';
-            pdfResponseElement.classList.remove('hidden');
+            // pdfResponseElement.classList.remove('hidden');
             pdffurtherq.classList.add('hidden')
             pdfQueryButton.classList.add('hidden');
             pdfQueryInput.classList.add('hidden');
@@ -197,6 +192,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     uploadPdfButton.disabled = false;
                     uploadPdfButton.innerHTML = 'Upload and Summarize';
+                    pdfResponseElement.remove('hidden')
                     pdffurtherq.classList.remove('hidden')
                     pdfQueryButton.classList.remove('hidden');
                     pdfQueryInput.classList.remove('hidden');
@@ -260,15 +256,10 @@ document.addEventListener('DOMContentLoaded', function() {
       
             try {
             const answer = await fetchAnswer(query);
-          //alert(answer.textContent);
             const questionItem = document.createElement('li');
-            //questionItem.classList.add('question-item');
-            //questionItem.innerHTML = '<strong>Question:</strong> ${query}';
             questionItem.innerHTML = `<strong>Question:</strong> ${query}<br><strong>Answer:</strong> ${answer}`;
             answerList.appendChild(questionItem);
             urlQueryInput.value = '';
-      
-        
              } catch (error) {
                 console.error(error);
             }
@@ -301,10 +292,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
             try {
             const answer = await fetchAnswerPdf(query);
-          //alert(answer.textContent);
             const questionItemPdf = document.createElement('li');
-            //questionItem.classList.add('question-item');
-            //questionItem.innerHTML = '<strong>Question:</strong> ${query}';
             questionItemPdf.innerHTML = `<strong>Question:</strong> ${query}<br><strong>Answer:</strong> ${answer}`;
             answerListPdf.appendChild(questionItemPdf);
             pdfQueryInput.value = '';
@@ -320,7 +308,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
  
     //pdf summarizer tab content
-   
     document.getElementById('pdfSummarizerButton').addEventListener('click', function() {
         document.getElementById('webSummarizer').style.display = 'none';
         document.getElementById('pdfSummarizer').style.display = 'block';
