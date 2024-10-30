@@ -16,8 +16,8 @@
             <div class="input-group">
                 <select id="modelSelect">
                     <option value=" ">-----</option>
-                    <option value="OV Meta LLama 2">Meta Llama 2 OV</option>
-                    <option value="OV Qwen 7B Instruct">Qwen 7B Instruct Model OV</option>
+                    <option value="Meta LLama 2">Meta Llama 2</option>
+                    <option value="Qwen 7B Instruct">Qwen 7B Instruct Model</option>
                 </select>
             </div>
             <button id="selectModelButton" class="button">Select Model</button>
@@ -56,14 +56,14 @@
                     <label for="pdfFile"><b> Select PDF: </b></label>
                     <input type="file" id="pdfFile" accept="application/pdf">
                 </div>
-                <button id="uploadPdfButton" class="button">Upload and Summarize</button>
                 <div id="progressContainer" class="progress">
                     <div class="progress-bar">
                         <div id="uploadProgress"></div>
                     </div>
                     <p id="uploadPercentage">0%</p>
                 </div>
-                <p id="fileName"></p>
+                <p id="fileName" class="step hidden"></p>
+                <button id="uploadPdfButton" class="button">Upload and Summarize</button>
                 <p id="pdfResponseElement" class="step hidden"></p>
 
                 <div class="qna-container" class="step hidden"></div>
@@ -74,7 +74,9 @@
                     </div>
                     <ul id="answerListPdf"></ul>
                 </div>
-            </div>           
+            </div>
+   
+           
         </div>
     </div>
     <script src="popup.js" defer></script>
