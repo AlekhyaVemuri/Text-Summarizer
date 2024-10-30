@@ -1,4 +1,3 @@
-
 from transformers import AutoTokenizer
 from optimum.intel import OVModelForCausalLM
 from langchain_community.llms import HuggingFacePipeline
@@ -11,7 +10,6 @@ from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.document_loaders import WebBaseLoader, PyPDFLoader
 
 # Prompt Templates for Summarization & QA Bot
-
 summary_template= """Write a concise summary of the following: "{context}" CONCISE SUMMARY: """
 query_template="""Use the following pieces of context to answer the question at the end.
     If you don't know the answer, just say that you don't know, don't try to make up an answer.
@@ -44,10 +42,10 @@ def load_llm(model_id):
     """
         Meta Llama2 & Qwen 7B models are converted to OpenVINO IR Format. This function compiles those converted models on GPU
     """
-    if model_id=="OV Meta LLama 2":
-        model_path=r"<Path to ov_llama_2 folder>"
-    elif model_id=="OV Qwen 7B Instruct":
-        model_path=r"<Path to ov_qwen7b folder>"
+    if model_id=="Meta LLama 2":
+        model_path=r"C:\DIYA\Sumarization_Updated_One\models\ov_llama_2"
+    elif model_id=="Qwen 7B Instruct":
+        model_path=r"C:\DIYA\Sumarization_Updated_One\models\ov_qwen7binstruct"
     else:
         print("Please select a model!")
     model = OVModelForCausalLM.from_pretrained(model_path , device='GPU')
@@ -84,6 +82,7 @@ def web_out(urls):
         chain_type_kwargs={"prompt": prompt},
         return_source_documents=False,
     )
+    
     question = "Please summarize the context in one paragraph of 100 words"
     summary = qa_chain({'query': question})
     response = summary['result']
@@ -101,7 +100,6 @@ def url_query(query,model_id):
         template=query_template,
         input_variables=["context", "question"]
         )
-    #global reduce_chain
     reduce_chain = RetrievalQA.from_chain_type(
             llm=llm_model,
             retriever=summ_vectorstore.as_retriever(),
@@ -116,8 +114,7 @@ def url_query(query,model_id):
     concise_summary = response[summary_start + len("Helpful Answer:"):].strip()
     return concise_summary
  
- 
- 
+
 def pdf_out(pdf):
     """
         When an end-user uploads a PDF into the plugin, this function loads the page data & passes into the RetrievalQA chain.
@@ -140,9 +137,11 @@ def pdf_out(pdf):
     )
     question = "Please summarize the context in one paragraph of 60 words"
     summary = reduce_chain({'query': question})
+
     response = summary['result']
     summary_start = response.find("CONCISE SUMMARY:")
     concise_summary = response[summary_start + len("CONCISE SUMMARY:"):].strip()
+    print(concise_summary)
     return concise_summary
 
 def pdf_query(query):
@@ -166,4 +165,3 @@ def pdf_query(query):
     summary_start = response.find("Helpful Answer:")
     concise_summary = response[summary_start + len("Helpful Answer:"):].strip()
     return concise_summary
- 
