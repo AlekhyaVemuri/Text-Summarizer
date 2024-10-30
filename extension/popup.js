@@ -66,6 +66,7 @@ document.addEventListener('DOMContentLoaded', function() {
         .catch((error) => {
             console.error('Error:', error);
         });
+    
     });
     
 
@@ -166,8 +167,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
             let previousResponseLength = 0;
             pdfResponseElement.innerHTML='';
-            // pdfResponseElement.classList.remove('hidden');
-            pdffurtherq.classList.add('hidden')
+            fileNameElement.classList.add('hidden');
+            pdffurtherq.classList.add('hidden');
+            fileNameElement.classList.remove('hidden');
             pdfQueryButton.classList.add('hidden');
             pdfQueryInput.classList.add('hidden');
     
@@ -186,13 +188,11 @@ document.addEventListener('DOMContentLoaded', function() {
             
             xhr.onload = function() {
                 if (xhr.status === 200) {
-                    // const response = JSON.parse(xhr.responseText);
-                    // pdfResponseElement.textContent = response.message || 'Upload successful';
-                    fileNameElement.textContent = `Uploaded File: ${file.name}`;
-                    
+                    fileNameElement.classList.remove('hidden');
+                    fileNameElement.innerHTML = `<strong>Uploaded File: </strong>${file.name}`;
+                    pdfResponseElement.classList.remove('hidden');
                     uploadPdfButton.disabled = false;
                     uploadPdfButton.innerHTML = 'Upload and Summarize';
-                    pdfResponseElement.remove('hidden')
                     pdffurtherq.classList.remove('hidden')
                     pdfQueryButton.classList.remove('hidden');
                     pdfQueryInput.classList.remove('hidden');
@@ -213,7 +213,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (event.lengthComputable) {
                     const percentComplete = Math.round((event.loaded / event.total) * 100);
                     uploadProgress.style.width = percentComplete + '%';
-                    uploadPercentage.textContent = percentComplete + '%';
+                    uploadPercentage.textContent = percentComplete + '% uploaded';
                 }
             };
     
@@ -260,6 +260,8 @@ document.addEventListener('DOMContentLoaded', function() {
             questionItem.innerHTML = `<strong>Question:</strong> ${query}<br><strong>Answer:</strong> ${answer}`;
             answerList.appendChild(questionItem);
             urlQueryInput.value = '';
+      
+        
              } catch (error) {
                 console.error(error);
             }
