@@ -33,6 +33,7 @@ A Chrome plugin, built using Flask, leverages an OpenVINO backend to efficiently
    ```
 6. **Load the Extension:**
    - In Chrome Developer mode, use the "Load Unpacked Extension" option to add the plugin. Refer to [Chrome’s development documentation](https://developer.chrome.com/docs/extensions/get-started/tutorial/hello-world#load-unpacked) for further details.
+     
      <img width="308" alt="image" src="https://github.com/user-attachments/assets/99a95942-93ea-4ec4-9ea8-6c10bcb98235">
 
 
