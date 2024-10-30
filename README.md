@@ -47,22 +47,30 @@ The directory contains:
 
 2. **Open the Chrome Browser:**
    - Activate & Pin the loaded extension.
+   - Plugin UI looks as follows:
+
+      <img width="286" alt="image" src="https://github.com/user-attachments/assets/37349acc-ff37-437b-928a-673ca4ad3986">
+
    
 3. **Select an OpenVINO Model:**
    - Choose an OpenVINO IR format model previously converted from Huggingface.
-   - <img width="250" alt="image" src="https://github.com/user-attachments/assets/cfeb665c-4c25-45cd-8ef8-f32efab46f78">
+
+     <img width="286" alt="image" src="https://github.com/user-attachments/assets/953050c9-c64c-4ce6-831d-626a52547d0b">
 
 
 4. **Interact with the UI:**
    - Choose either **Web Page** or **PDF** post selecting one of the converted OV models:
-   - <img width="263" alt="image" src="https://github.com/user-attachments/assets/022679a3-599f-43d9-9f6c-0d3ef8c94a89">
+
+     <img width="285" alt="image" src="https://github.com/user-attachments/assets/065022e9-c9a2-474c-ae4e-5a2f298a9934">
+
 
      - **Web Summarizer:**
        1. Enter the URL of the webpage to summarize.
        2. Click the "Summarize" button.
        3. After summarization, the text appears, and users can ask follow-up questions.
 
-          <img width="262" alt="image" src="https://github.com/user-attachments/assets/91e7cd27-b097-4210-b613-c1231273c294">
+          <img width="287" alt="image" src="https://github.com/user-attachments/assets/5f308ad3-b5bc-4b3e-9d29-b8002dc88e29">
+
 
 
      - **PDF Summarizer:**
@@ -70,7 +78,10 @@ The directory contains:
        2. Click "Upload & Summarize."
        3. After summarization, the text appears, and users can ask additional questions.
 
-          <img width="265" alt="image" src="https://github.com/user-attachments/assets/c182a42f-3f83-450a-9ec7-d48144d0ef53">
+          <img width="290" alt="image" src="https://github.com/user-attachments/assets/4d6e3ce0-1650-4cd0-a073-0e84891518a3">
+          
+          <img width="300" alt="image" src="https://github.com/user-attachments/assets/ea05eca2-fa53-4b17-9c85-67a692607376">
+
 
 5. **Reload the Page:**  
-   - Refresh the webpage to restart the plugin.
+   - Refresh the webpage or Close & open the plugin to restart.
