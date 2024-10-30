@@ -79,6 +79,8 @@ The directory contains:
        3. After summarization, the text appears, and users can ask additional questions.
 
           <img width="290" alt="image" src="https://github.com/user-attachments/assets/4d6e3ce0-1650-4cd0-a073-0e84891518a3">
+      
+       4. Sample output post summarization.
           
           <img width="300" alt="image" src="https://github.com/user-attachments/assets/ea05eca2-fa53-4b17-9c85-67a692607376">
 
