@@ -1,8 +1,7 @@
 import time
 from flask import Flask, Response, request, jsonify
 from flask_cors import CORS
-# from code import web_out, pdf_out,pdf_query,url_query
-from codecopya import load_llm, web_out, pdf_out,pdf_query,url_query
+from code import load_llm, web_out, pdf_out,pdf_query,url_query
 import tempfile
 import chromadb
  
