@@ -24,15 +24,21 @@ A Chrome plugin, built using Flask, leverages an OpenVINO backend to efficiently
 
 4. **Install Dependencies:**
    - Execute:
-     `cd Text-Summarizer` 
-     `pip install -r requirements.txt`
+     ```
+     cd Text-Summarizer
+     ```
+     ```
+     pip install -r requirements.txt
+     ```
      
      >**Note**: Run your terminal as admin to avoid any permission issues.
      
 
 5. **Download and Convert the Huggingface Model to OpenVINO IR Format:**
-   - Log in to Huggingface:  
-     `huggingface-cli login`
+   - Log in to Huggingface:
+     ```
+     huggingface-cli login
+     ```
    - Generate a token from Huggingface. For private or gated models, refer to [Huggingface documentation](https://huggingface.co/docs/hub/en/models-gated).
    - Convert the model using `optimum-cli`:
      ```
