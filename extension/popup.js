@@ -26,128 +26,129 @@ document.addEventListener('DOMContentLoaded', function() {
     // Step 1: Select Model
     selectModelButton.addEventListener('click', () => {
         const selectedModel = modelSelect.value;
-        
-        if (!selectedModel) {
-            alert('Please select a model.');
-            return;
+
+        if (selectedModel=== "") {
+            alert("Please select a model.");
+            selectModelButton.innerHTML=`Select Model`;
         }
-        selectModelButton.innerHTML=`Loading ${selectedModel} <span class="button-spinner"></span>`;
-    
-        const modelName = selectedModel;
-        if (modelName) {
-            selectedModelElement.textContent = `Selected model: ${modelName}`;
-            
-        } else {
-            console.error('Could not find the model name.');
-            selectModelButton.disabled=True;
-            selectModelButton.innerHTML="Failed to Load"
-        }
-    
-        // Send selected model to the backend to load and compile
-        fetch('http://localhost:5000/select-model', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ model_id: modelName }),
-        })
-        .then(response => {
-            response.json()
-            selectModelStep.classList.add('hidden');
-            summarizersStep.classList.remove('hidden');
-        })
-        .then(data => {
-            if (data.message) {
-                console.log(data.message);
+        else {
+            selectModelButton.innerHTML=`Loading ${selectedModel} <span class="button-spinner"></span>`;
+            const modelName = selectedModel;
+            if (modelName) {
+                selectedModelElement.textContent = `Selected model: ${modelName}`;
+                
             } else {
-                console.error('Failed to select model.');
+                console.error('Could not find the model name.');
+                selectModelButton.disabled=True;
+                selectModelButton.innerHTML="Failed to Load"
             }
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-        });
-    
+            // Send selected model to the backend to load and compile
+            fetch('http://localhost:5000/select-model', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ model_id: modelName }),
+            })
+            .then(response => {
+                response.json()
+                selectModelStep.classList.add('hidden');
+                summarizersStep.classList.remove('hidden');
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                selectModelButton.remove('hidden');
+            });
+        }
+        
     });
     
 
     // Step 2: Web Summarizer
-    sendUrlButton.addEventListener('click', () => {
-        const url = urlInput.value;
-        if (url.trim() === "") {
-            responseElement.textContent = 'Please enter a valid URL.';
-            return;
-        }
-        
-        sendUrlButton.disabled = true;
-        sendUrlButton.innerHTML = 'Summarizing... <span class="button-spinner"></span>';
-        responseElement.classList.add('hidden');
-        urlfurtherq.classList.add('hidden');
-        urlQueryButton.classList.add('hidden') ;
-        urlQueryInput.classList.add('hidden');
-    
-        fetch('http://localhost:5000/process-url', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ url: url })
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-    
-            // Get the reader for streaming the response
-            const reader = response.body.getReader();
-            const decoder = new TextDecoder();
-            let receivedText = '';
-            responseElement.classList.remove('hidden');
-            responseElement.innerHTML='';
+    function ValidURL(url){
+        var regex = /(?:https?):\/\/(\w+:?\w*)?(\S+)(:\d+)?(\/|\/([\w#!:.?+=&%!\-\/]))?/;
+        if(!regex .test(url)) {
+            alert("Please enter valid URL."); 
+        } 
+        else 
+        {
+            sendUrlButton.disabled = true;
+            sendUrlButton.innerHTML = 'Summarizing... <span class="button-spinner"></span>';
+            responseElement.classList.add('hidden');
             urlfurtherq.classList.add('hidden');
             urlQueryButton.classList.add('hidden') ;
             urlQueryInput.classList.add('hidden');
-    
-            // Function to read chunks of data
-            function readStream() {
-                reader.read().then(({ done, value }) => {
-                    if (done) {
-                        // Stream finished
-                        sendUrlButton.innerHTML = 'Summarize';  // Reset the button text
+        
+            fetch('http://localhost:5000/process-url', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ url: url })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+        
+                // Get the reader for streaming the response
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let receivedText = '';
+                responseElement.classList.remove('hidden');
+                responseElement.innerHTML='';
+                urlfurtherq.classList.add('hidden');
+                urlQueryButton.classList.add('hidden') ;
+                urlQueryInput.classList.add('hidden');
+        
+                // Function to read chunks of data
+                function readStream() {
+                    reader.read().then(({ done, value }) => {
+                        if (done) {
+                            // Stream finished
+                            sendUrlButton.innerHTML = 'Summarize';  // Reset the button text
+                            sendUrlButton.disabled = false;
+                            urlfurtherq.classList.remove('hidden');
+                            urlQueryButton.classList.remove('hidden') ;
+                            urlQueryInput.classList.remove('hidden');
+                            return;
+                        }
+        
+                        // Decode the chunk and append to the result
+                        
+                        const chunk = decoder.decode(value, { stream: true });
+                        receivedText += chunk;
+                        console.log(chunk)
+                        responseElement.innerHTML += `${chunk}`;
+        
+                        // Continue reading the next chunk
+                        readStream();
+                    }).catch(error => {
+                        console.error('Error reading stream:', error);
+                        responseElement.textContent = 'Error: ' + error.message;
+                        sendUrlButton.innerHTML = 'Summarize';  
                         sendUrlButton.disabled = false;
-                        urlfurtherq.classList.remove('hidden');
-                        urlQueryButton.classList.remove('hidden') ;
-                        urlQueryInput.classList.remove('hidden');
-                        return;
-                    }
-    
-                    // Decode the chunk and append to the result
-                    
-                    const chunk = decoder.decode(value, { stream: true });
-                    receivedText += chunk;
-                    console.log(chunk)
-                    responseElement.innerHTML += `${chunk}`;
-    
-                    // Continue reading the next chunk
-                    readStream();
-                }).catch(error => {
-                    console.error('Error reading stream:', error);
-                    responseElement.textContent = 'Error: ' + error.message;
-                    sendUrlButton.innerHTML = 'Summarize';  
-                    sendUrlButton.disabled = false;
-                });
-            }
-    
-            // Start reading the stream
-            readStream();
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            responseElement.textContent = 'Error: ' + error.message;
-            sendUrlButton.innerHTML = 'Summarize';  
-            sendUrlButton.disabled = false;
-        });
+                    });
+                }
+        
+                // Start reading the stream
+                readStream();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                responseElement.textContent = 'Error: ' + error.message;
+                sendUrlButton.innerHTML = 'Summarize';  
+                sendUrlButton.disabled = false;
+            });
+        }}
+    sendUrlButton.addEventListener('click', () => {
+        const urlValue = urlInput.value.trim();
+        if (urlValue=== "") {
+            alert("Enter a url");
+        }
+        else(ValidURL(urlValue))
     });
-    
+
  
     // Step 2: PDF Summarizer
     uploadPdfButton.addEventListener('click', () => {
@@ -220,7 +221,8 @@ document.addEventListener('DOMContentLoaded', function() {
             // Send the form data with the file
             xhr.send(formData);
         } else {
-            pdfResponseElement.textContent = 'Please select a valid PDF file.';
+            alert("Please enter a valid pdf file");
+            // pdfResponseElement.textContent = 'Please select a valid PDF file.';
             uploadPdfButton.innerHTML = 'Upload and Summarize';
             uploadPdfButton.disabled = false;
         }
@@ -251,17 +253,17 @@ document.addEventListener('DOMContentLoaded', function() {
         urlQueryButton.addEventListener('click', async () => {
             const query = urlQueryInput.value;
             if (!query) {
+                alert("Pleae enter a query!")
              return;
             }
       
             try {
-            const answer = await fetchAnswer(query);
-            const questionItem = document.createElement('li');
-            questionItem.innerHTML = `<strong>Question:</strong> ${query}<br><strong>Answer:</strong> ${answer}`;
-            answerList.appendChild(questionItem);
-            urlQueryInput.value = '';
-      
-        
+                const answer = await fetchAnswer(query);
+                const questionItem = document.createElement('li');
+                questionItem.innerHTML = `<strong>Question:</strong> ${query}<br><strong>Answer:</strong> ${answer}`;
+                answerList.appendChild(questionItem);
+                urlQueryInput.value = '';
+            
              } catch (error) {
                 console.error(error);
             }
@@ -289,15 +291,16 @@ document.addEventListener('DOMContentLoaded', function() {
         pdfQueryButton.addEventListener('click', async () => {
             const query = pdfQueryInput.value;
             if (!query) {
+                alert("Please enter a query!")
              return;
             }
     
             try {
-            const answer = await fetchAnswerPdf(query);
-            const questionItemPdf = document.createElement('li');
-            questionItemPdf.innerHTML = `<strong>Question:</strong> ${query}<br><strong>Answer:</strong> ${answer}`;
-            answerListPdf.appendChild(questionItemPdf);
-            pdfQueryInput.value = '';
+                const answer = await fetchAnswerPdf(query);
+                const questionItemPdf = document.createElement('li');
+                questionItemPdf.innerHTML = `<strong>Question:</strong> ${query}<br><strong>Answer:</strong> ${answer}`;
+                answerListPdf.appendChild(questionItemPdf);
+                pdfQueryInput.value = '';
             } catch (error) {
                 console.error(error);
             }
