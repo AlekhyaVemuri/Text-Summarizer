@@ -1,7 +1,7 @@
 import time
 from flask import Flask, Response, request, jsonify
 from flask_cors import CORS
-from code import load_llm, web_out, pdf_out,pdf_query,url_query
+from code import load_llm, web_out, pdf_out, pdf_query, url_query
 import tempfile
 import chromadb
  
@@ -15,30 +15,29 @@ def select_model():
     """
         Model selection function which would further trigger Model compilation function.
     """
-    global current_model
-    data = request.get_json()
-    model_id = data.get('model_id')
-
-    if not model_id:
-        return jsonify({'message': 'No model ID provided'}), 400
-
-    # Load and compile the model once
-    current_model = load_llm(model_id)
-    
-    if current_model:
+    try:
+        global current_model
+        data = request.get_json()
+        model_id = data.get('model_id')
+        current_model = load_llm(model_id)
         return jsonify({'message': f'Model {model_id} loaded successfully.'}), 200
-    else:
-        return jsonify({'message': 'Failed to load model.'}), 500
-
+    
+    except Exception as e:
+        return jsonify({'message': f'Failed to load model \n Error: {e}'}), 500
+        
 
 # @app.route('/stream-output', methods=['POST'])
 def stream_output(process_function, *args):
     """
         Generator function to stream output from a process function.
     """
-    for chunk in process_function(*args):
-        if chunk is not None:
-            yield f"{chunk}"
+    try:
+        for chunk in process_function(*args):
+            if chunk is not None:
+                yield f"{chunk}"
+    except Exception as e:
+        print(f"Error while streaming output: {e}")
+        yield f"Error while streaming output: {e}"
  
 # URL processing code
 @app.route('/process-url', methods=['POST'])
@@ -46,14 +45,18 @@ def process_url():
     """
         Fetches URL from the plugin & triggers the URL summarization function.
     """
-    data = request.get_json()
-    url = data.get('url')  
-    if not url:
-        return jsonify({'message': 'No URL provided'}), 400
-
-    chromadb.api.client.SharedSystemClient.clear_system_cache()
-    return Response(stream_output(web_out, [url]), content_type='text/event-stream')
+    try:
+        data = request.get_json()
+        url = data.get('url')  
+        if not url:
+            return jsonify({'message': 'No URL provided'}), 400
+        chromadb.api.client.SharedSystemClient.clear_system_cache()
+        return Response(stream_output(web_out, [url]), content_type='text/event-stream')
     
+    except Exception as e: 
+        print(f"Error while processing URL: {e}")
+        return jsonify({'message': f'Error while processomg URL- {e}'}), 400
+
  
 # PDF processing code
 @app.route('/upload-pdf', methods=['POST'])
@@ -61,13 +64,8 @@ def upload_pdf():
     """
         Once the PDF's uploaded, the PDF Summarization function's triggered.
     """
-    if 'pdf' not in request.files:
-        return jsonify({"message": "No PDF file found"}), 400
    
-    pdf_file = request.files['pdf']
-    if pdf_file.filename == '':
-        return jsonify({"message": "No selected file"}), 400
- 
+    pdf_file = request.files['pdf'] 
     if pdf_file and pdf_file.content_type == 'application/pdf':
         try:
             with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as temp_pdf:
@@ -87,26 +85,30 @@ def upload_pdf():
 #query code for pdf starts here
 @app.route('/your_query_pdf', methods=['POST'])
 def pdf_process_query():
-    data = request.get_json()
-    model_id = current_model  
-    query=data.get('query')
-    if not data:
-        return jsonify({'message':'no query provided'}),400
-    response_message=str(pdf_query(query,model_id))
-    return jsonify({'message': response_message})
+    try:
+        data = request.get_json()
+        model_id = current_model  
+        query=data.get('query')
+        if not data:
+            return jsonify({'message':'no query provided'}),400
+        response_message=str(pdf_query(query,model_id))
+        return jsonify({'message': response_message})
+    except Exception as e:
+        return jsonify({'message': f'Error: {e}'}), 500
  
 #query code for url starts here
 @app.route('/your_query_url', methods=['POST'])
 def url_process_query():
-    data = request.get_json()
-    print(data)
-    model_id = request.form.get('model_id')  
-    query=data.get('query')
-    if not data:
-        return jsonify({'message':'no query provided'}),400
-    response_message=str(url_query(query,model_id))
-    print(response_message)
-    return jsonify({'message': response_message})
+    try:
+        data = request.get_json()
+        model_id = request.form.get('model_id')  
+        query=data.get('query')
+        if not data:
+            return jsonify({'message':'no query provided'}),400
+        response_message=str(url_query(query,model_id))
+        return jsonify({'message': response_message})
+    except Exception as e:
+        return jsonify({'message': f'Error: {e}'}), 500
 
 
 if __name__ == '__main__':
