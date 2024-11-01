@@ -15,7 +15,7 @@
             <label for="modelSelect">Select Model :</label>
             <div class="input-group">
                 <select id="modelSelect">
-                    <option value=" ">-----</option>
+                    <option value="">-----</option>
                     <option value="Meta LLama 2">Meta Llama 2</option>
                     <option value="Qwen 7B Instruct">Qwen 7B Instruct Model</option>
                 </select>
@@ -35,7 +35,7 @@
             <div id="webSummarizer" class="tabcontent">
                 <div class="input-group">
                     <label for="urlInput">Enter URL:</label>
-                    <input type="text" id="urlInput" placeholder="Paste URL here">
+                    <input type="text" id="urlInput" pattern="https://.*" placeholder="Enter an URL here:" required/>
                 </div>
                 <button id="sendUrlButton" class="button">Summarize</button>
                 <p id="responseElement" class="step hidden"></p>
@@ -47,7 +47,7 @@
                       <input type="text" id="urlQueryInput" placeholder="enter your query here" class="step hidden">
                       <button id="urlQueryButton" class="step hidden">Answer</button>
                     </div>
-                    <ul id="answerList"></ul>
+                    <ul id="answerList" class ="step hidden"></ul>
                 </div>
             </div>
  
@@ -79,6 +79,7 @@
            
         </div>
     </div>
+    
     <script src="popup.js" defer></script>
 </body>
 </html>
