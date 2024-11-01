@@ -4,17 +4,27 @@ A Chrome plugin, built using Flask, leverages an OpenVINO backend to efficiently
 
 ## Prerequisites
 
-1. **Create a Conda Environment:**
-   - Run the command:  
-     `conda create -n llm python=3.11 libuv`
+1. **Install the below necessary tools/packages:**
+   -
 
-2. **Install Dependencies:**
-   - Execute:  
+2. **Clone the Repository**
+   ```
+   git clone -b OpenVINO-backend https://github.com/AlekhyaVemuri/Text-Summarizer.git
+   ```
+   
+3. **Create a Conda Environment:**
+   - Run the command:  
+     `conda create -n summarizer_plugin python=3.11 libuv`
+     `conda activate summarizer_plugin`
+
+4. **Install Dependencies:**
+   - Execute:
+     `cd Text-Summarizer` 
      `pip install -r requirements.txt`
      **Note**: Run your terminal as admin to avoid any permission issues.
      
 
-3. **Download and Convert the Huggingface Model to OpenVINO IR Format:**
+5. **Download and Convert the Huggingface Model to OpenVINO IR Format:**
    - Log in to Huggingface:  
      `huggingface-cli login`
    - Generate a token from Huggingface. For private or gated models, refer to Huggingface Hub's documentation.
@@ -27,10 +37,6 @@ A Chrome plugin, built using Flask, leverages an OpenVINO backend to efficiently
      
      ```
 
-4. **Clone the Repository**
-   ```
-   git clone -b OpenVINO-backend https://github.com/AlekhyaVemuri/Text-Summarizer.git
-   ```
 6. **Load the Extension:**
    - In Chrome Developer mode, use the "Load Unpacked Extension" option to add the plugin. Refer to [Chrome’s development documentation](https://developer.chrome.com/docs/extensions/get-started/tutorial/hello-world#load-unpacked) for further details.
      
