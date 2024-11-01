@@ -22,13 +22,14 @@ A Chrome plugin, built using Flask, leverages an OpenVINO backend to efficiently
    - Execute:
      `cd Text-Summarizer` 
      `pip install -r requirements.txt`
-     **Note**: Run your terminal as admin to avoid any permission issues.
+     
+     >**Note**: Run your terminal as admin to avoid any permission issues.
      
 
 5. **Download and Convert the Huggingface Model to OpenVINO IR Format:**
    - Log in to Huggingface:  
      `huggingface-cli login`
-   - Generate a token from Huggingface. For private or gated models, refer to Huggingface Hub's documentation.
+   - Generate a token from Huggingface. For private or gated models, refer to [Huggingface documentation](https://huggingface.co/docs/hub/en/models-gated).
    - Convert the model using `optimum-cli`:
      ```
      mkdir models
@@ -37,6 +38,7 @@ A Chrome plugin, built using Flask, leverages an OpenVINO backend to efficiently
      optimum-cli export openvino --model Qwen/Qwen2-7B-Instruct --weight-format int4 ov_qwen7b
      
      ```
+     >**Note**: [Raise access request](https://www.llama.com/llama-downloads) for Llama models as it is a gated repository.
 6. **Add appropriate model path**
 
 7. **Load the Extension:**
