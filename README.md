@@ -14,10 +14,13 @@ A Chrome plugin, built using Flask, leverages an OpenVINO backend to efficiently
    ```
    
 3. **Create a Conda Environment:**
-   - Run the command:  
-     `conda create -n summarizer_plugin python=3.11 libuv`
-     
-     `conda activate summarizer_plugin`
+   - Run the command:
+     ```
+     conda create -n summarizer_plugin python=3.11 libuv
+     ```
+     ```
+     conda activate summarizer_plugin
+     ```
 
 4. **Install Dependencies:**
    - Execute:
