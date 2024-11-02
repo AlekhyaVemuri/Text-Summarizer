@@ -118,7 +118,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         
                         const chunk = decoder.decode(value, { stream: true });
                         receivedText += chunk;
-                        console.log(chunk)
                         responseElement.innerHTML += `${chunk}`;
         
                         // Continue reading the next chunk
@@ -143,6 +142,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }}
     sendUrlButton.addEventListener('click', () => {
         const urlValue = urlInput.value.trim();
+        answerList.innerHTML='';
         if (urlValue=== "") {
             alert("Enter a url");
         }
@@ -153,6 +153,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Step 2: PDF Summarizer
     uploadPdfButton.addEventListener('click', () => {
         const file = pdfFileInput.files[0];
+        answerListPdf.innerHTML='';
     
         if (file && file.type === 'application/pdf') {
             const formData = new FormData();
@@ -165,14 +166,16 @@ document.addEventListener('DOMContentLoaded', function() {
             uploadPdfButton.disabled = true;
             uploadPdfButton.innerHTML = 'Summarizing... <span class="button-spinner"></span>';
             pdfResponseElement.classList.add('hidden');
+            answerListPdf.value = ``;
     
             let previousResponseLength = 0;
             pdfResponseElement.innerHTML='';
             fileNameElement.classList.add('hidden');
             pdffurtherq.classList.add('hidden');
-            fileNameElement.classList.remove('hidden');
+            fileNameElement.classList.add('hidden');
             pdfQueryButton.classList.add('hidden');
             pdfQueryInput.classList.add('hidden');
+            answerListPdf.classList.add('hidden');
     
             // Handle the response from the server
             xhr.onprogress = function() {
@@ -197,6 +200,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     pdffurtherq.classList.remove('hidden')
                     pdfQueryButton.classList.remove('hidden');
                     pdfQueryInput.classList.remove('hidden');
+                    answerListPdf.classList.remove('hidden');
                 } else {
                     uploadPdfButton.innerHTML = 'Upload and Summarize';
                     uploadPdfButton.disabled = false;
@@ -228,12 +232,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
   
-   
-    
     //url query part
-
     async function fetchAnswer(query) {
-        // Replace with your actual API call or logic to fetch the answer
         const response = await fetch('http://localhost:5000/your_query_url', {
           method: 'POST',
           headers: {
@@ -246,32 +246,38 @@ document.addEventListener('DOMContentLoaded', function() {
           throw new Error('Error fetching answer: ' + response.statusText);
         }
         const data = await response.json();
-        console.log(data.message);
         return data.message;
       }
       
         urlQueryButton.addEventListener('click', async () => {
             const query = urlQueryInput.value;
-            if (!query) {
-                alert("Pleae enter a query!")
-             return;
+            urlQueryButton.disabled = true;
+            urlQueryButton.innerHTML = `<span class="button-spinner"></span>`;
+            if (query) {
+                try {
+                    const answer = await fetchAnswer(query);
+                    const questionItem = document.createElement('li');
+                    questionItem.innerHTML = `<strong>Question:</strong> ${query}<br><strong>Answer:</strong> ${answer}`;
+                    answerList.appendChild(questionItem);
+                    urlQueryInput.value = '';
+                    urlQueryButton.disabled = false;
+                    urlQueryButton.innerHTML = `Answer`;
+                 }
+                 catch (error) {
+                    console.error(error);
+                    urlInput.value ='';
+                    urlQueryButton.disabled = false;
+                    urlQueryButton.innerHTML = `Answer`;
+                } 
             }
-      
-            try {
-                const answer = await fetchAnswer(query);
-                const questionItem = document.createElement('li');
-                questionItem.innerHTML = `<strong>Question:</strong> ${query}<br><strong>Answer:</strong> ${answer}`;
-                answerList.appendChild(questionItem);
-                urlQueryInput.value = '';
-            
-             } catch (error) {
-                console.error(error);
-            }
+            else {
+                alert("Please enter a query!");
+                urlQueryButton.innerHTML = `Answer`;
+            } 
         });
     
     //functionality for pdf query input
     async function fetchAnswerPdf(query) {
-        // Replace with your actual API call or logic to fetch the answer
         const response = await fetch('http://localhost:5000/your_query_pdf', {
           method: 'POST',
           headers: {
@@ -279,7 +285,7 @@ document.addEventListener('DOMContentLoaded', function() {
           },
           body: JSON.stringify({ query: query })
         });
-      
+        console.log(response)
         if (!response.ok) {
           throw new Error('Error fetching answer: ' + response.statusText);
         }
@@ -290,19 +296,28 @@ document.addEventListener('DOMContentLoaded', function() {
       
         pdfQueryButton.addEventListener('click', async () => {
             const query = pdfQueryInput.value;
-            if (!query) {
-                alert("Please enter a query!")
-             return;
+            console.log(query);
+            pdfQueryButton.disabled = true;
+            pdfQueryButton.innerHTML = `<span class="button-spinner"></span>`;
+            if (query) {
+                try {
+                    const answer = await fetchAnswerPdf(query);
+                    const questionItemPdf = document.createElement('li');
+                    questionItemPdf.innerHTML = `<strong>Question:</strong> ${query}<br><strong>Answer:</strong> ${answer}`;
+                    answerListPdf.appendChild(questionItemPdf);
+                    pdfQueryInput.value = '';
+                    pdfQueryButton.disabled = false;
+                    pdfQueryButton.innerHTML = `Answer`;
+                } catch (error) {
+                    console.error(error);
+                    pdfQueryInput.value = '';
+                    pdfQueryButton.disabled = false;
+                    pdfQueryButton.innerHTML = `Answer`;
+                } 
             }
-    
-            try {
-                const answer = await fetchAnswerPdf(query);
-                const questionItemPdf = document.createElement('li');
-                questionItemPdf.innerHTML = `<strong>Question:</strong> ${query}<br><strong>Answer:</strong> ${answer}`;
-                answerListPdf.appendChild(questionItemPdf);
-                pdfQueryInput.value = '';
-            } catch (error) {
-                console.error(error);
+            else {
+                alert("Please enter a query!");
+                pdfQueryButton.innerHTML = `Answer`;
             }
         });
 
