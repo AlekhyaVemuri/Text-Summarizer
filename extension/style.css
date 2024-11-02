@@ -128,28 +128,44 @@ h1 {
  
     
     /* for query */
-    .qna-container {
-        display: flex;
-        flex-direction: column;
-        padding: 20px;
-      }
+    /* Styles for qna-container */
+.qna-container {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
 
-      .query-box .urlQueryButton {
-        display: inline-block;
-        padding: 10px 20px;
-        background-color:#3437e3;
-        color: #fff;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-      
-      .answer-container {
-        border: 1px solid #b02828;
-        padding: 10px;
-      }
-      
-      .error-message {
-        color: red;
-        font-weight: bold;
-      }
+.query-box {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.query-box input[type="text"] {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-right: 5px;
+}
+
+.query-box button {
+  padding: 8px 15px;
+  background-color: #3437e3;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.answer-container {
+  margin-top: 15px;
+  border: 1px solid #b02828;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.error-message {
+  color: red;
+  font-weight: bold;
+}
