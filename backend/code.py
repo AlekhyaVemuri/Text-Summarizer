@@ -48,9 +48,9 @@ def load_llm(model_id):
     if model_id:
         try:
             if model_id=="Meta LLama 2":
-                model_path=r"<Path to Llama OV model directory>"
+                model_path=r"C:\DIYA\Sumarization_Updated_One\models\ov_llama_2"
             elif model_id=="Qwen 7B Instruct":
-                model_path=r"<Path to Qwen OV model directory>"
+                model_path=r"C:\DIYA\Sumarization_Updated_One\models\ov_qwen7binstruct"
             model = OVModelForCausalLM.from_pretrained(model_path , device='GPU')
             tokenizer = AutoTokenizer.from_pretrained(model_path)
             pipe=pipeline(
@@ -99,7 +99,7 @@ def web_out(urls):
         print(f"Failed to summarize webpage \n Error: {e}")
     
  
-def url_query(query,model_id):
+def url_query(query):
     """
         Post summarization, end users were given a feature to ask follow-up questions to the BoT.
         This function fetches the query asked by the users, searches an answer from the vectorstore & returns an answer in less than 10 words.
@@ -179,6 +179,7 @@ def pdf_query(query):
         response = summary['result']
         summary_start = response.find("Helpful Answer:")
         concise_summary = response[summary_start + len("Helpful Answer:"):].strip()
+        print(concise_summary)
         return concise_summary
     except Exception as e:
         print(f"Error in PDF Summarizer QA BoT: {e}")
