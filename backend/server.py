@@ -1,7 +1,7 @@
 import time
 from flask import Flask, Response, request, jsonify
 from flask_cors import CORS
-from code import load_llm, web_out, pdf_out, pdf_query, url_query
+from code import load_llm, web_out, pdf_out,pdf_query,url_query
 import tempfile
 import chromadb
  
@@ -36,7 +36,6 @@ def stream_output(process_function, *args):
             if chunk is not None:
                 yield f"{chunk}"
     except Exception as e:
-        print(f"Error while streaming output: {e}")
         yield f"Error while streaming output: {e}"
  
 # URL processing code
@@ -87,12 +86,11 @@ def upload_pdf():
 def pdf_process_query():
     try:
         data = request.get_json()
-        model_id = current_model  
         query=data.get('query')
         if not data:
             return jsonify({'message':'no query provided'}),400
-        response_message=str(pdf_query(query,model_id))
-        return jsonify({'message': response_message})
+        response_message=str(pdf_query(query))
+        return jsonify({'message': response_message}), 200
     except Exception as e:
         return jsonify({'message': f'Error: {e}'}), 500
  
@@ -101,12 +99,11 @@ def pdf_process_query():
 def url_process_query():
     try:
         data = request.get_json()
-        model_id = request.form.get('model_id')  
         query=data.get('query')
         if not data:
             return jsonify({'message':'no query provided'}),400
-        response_message=str(url_query(query,model_id))
-        return jsonify({'message': response_message})
+        response_message=str(url_query(query))
+        return jsonify({'message': response_message}), 200
     except Exception as e:
         return jsonify({'message': f'Error: {e}'}), 500
 
