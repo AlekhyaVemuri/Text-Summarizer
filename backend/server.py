@@ -1,10 +1,12 @@
+#Importing necessary Libraries
 import time
 from flask import Flask, Response, request, jsonify
 from flask_cors import CORS
 from code import load_llm, web_out, pdf_out,pdf_query,url_query
 import tempfile
 import chromadb
- 
+
+#Initializing the flask app and enabling CORS
 app = Flask(__name__)
 CORS(app)  # This will enable CORS for all routes
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
@@ -25,8 +27,7 @@ def select_model():
     except Exception as e:
         return jsonify({'message': f'Failed to load model \n Error: {e}'}), 500
         
-
-# @app.route('/stream-output', methods=['POST'])
+#function explaining how a sentences are divided into chunks
 def stream_output(process_function, *args):
     """
         Generator function to stream output from a process function.
