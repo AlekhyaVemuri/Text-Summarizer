@@ -1,3 +1,4 @@
+#Importing necessary libraries
 from transformers import AutoTokenizer, pipeline
 from optimum.intel import OVModelForCausalLM
 from langchain_community.llms import HuggingFacePipeline
@@ -21,6 +22,7 @@ query_template="""Use the following pieces of context to answer the question at 
  
     Helpful Answer:"""
 
+#Function created for preprocessing 
 def pre_processing(loader):
     """
         This function does the below steps in a sequential order:
@@ -40,7 +42,7 @@ def pre_processing(loader):
         print(f"Error while processing Webpage/PDF page content: {e}")
     
 
- 
+ #function created for laoding the LLM
 def load_llm(model_id):
     """
         Meta Llama2 & Qwen 7B models are converted to OpenVINO IR Format. This function compiles those converted models on GPU
@@ -66,7 +68,7 @@ def load_llm(model_id):
         except Exception as e:
             print(f"Failed to load the model. Please check whether the model_path is correct. \n Error: {e}")
 
-
+#function created for URL content summarization
 def web_out(urls):
     """
         When an end user pastes a URL into the plugin, this function loads the page data & passes into the RetrievalQA chain.
@@ -98,7 +100,7 @@ def web_out(urls):
     except Exception as e:
         print(f"Failed to summarize webpage \n Error: {e}")
     
- 
+#function created for QnA bot for URL 
 def url_query(query):
     """
         Post summarization, end users were given a feature to ask follow-up questions to the BoT.
@@ -125,7 +127,7 @@ def url_query(query):
     except Exception as e:
         print(f"Error in Webpage Summarizer QA BoT: {e}")
 
-
+#function created for PDF summarization
 def pdf_out(pdf):
     """
         When an end-user uploads a PDF into the plugin, this function loads the page data & passes into the RetrievalQA chain.
@@ -157,7 +159,7 @@ def pdf_out(pdf):
     except Exception as e:
         print(f"Failed to summarize PDF \n Error: {e}")
 
-
+#function created for Question Answering bot for PDF
 def pdf_query(query):
     """
         Post summarization, end users were given a feature to ask follow-up questions to the BoT.
