@@ -50,9 +50,9 @@ def load_llm(model_id):
     if model_id:
         try:
             if model_id=="Meta LLama 2":
-                model_path=r"C:\DIYA\Sumarization_Updated_One\models\ov_llama_2"
+                model_path=r"Path to ov_llama_2 folder"
             elif model_id=="Qwen 7B Instruct":
-                model_path=r"C:\DIYA\Sumarization_Updated_One\models\ov_qwen7binstruct"
+                model_path=r"Path to ov_qwen7b folder"
             model = OVModelForCausalLM.from_pretrained(model_path , device='GPU')
             tokenizer = AutoTokenizer.from_pretrained(model_path)
             pipe=pipeline(
