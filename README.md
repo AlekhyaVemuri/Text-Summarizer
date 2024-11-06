@@ -9,10 +9,12 @@ A Chrome plugin, built using Flask, leverages an OpenVINO backend to efficiently
    - [Miniforge](https://conda-forge.org/download/)
    - [Google Chrome for Windows](https://www.google.com/chrome/?brand=OZZY&ds_kid=43700080794581137&gad_source=1&gclid=Cj0KCQiAoae5BhCNARIsADVLzZdwNNB5nIyjZ8OyCzg6h_cCig1eoaYquUSEd7BAigJhTzps1Kxuop8aArE6EALw_wcB&gclsrc=aw.ds)
 
+
 2. **Clone the Repository**
    ```
    git clone -b OpenVINO-backend https://github.com/AlekhyaVemuri/Text-Summarizer.git
    ```
+
    
 3. **Create a Conda Environment:**
    - Run the command:
@@ -22,6 +24,7 @@ A Chrome plugin, built using Flask, leverages an OpenVINO backend to efficiently
      ```
      conda activate summarizer_plugin
      ```
+
 
 4. **Install Dependencies:**
    - Execute:
@@ -33,6 +36,7 @@ A Chrome plugin, built using Flask, leverages an OpenVINO backend to efficiently
      ```
      
      >**Note**: Run your terminal as admin to avoid any permission issues.
+
      
 
 5. **Download and Convert the Huggingface Model to OpenVINO IR Format:**
@@ -50,8 +54,12 @@ A Chrome plugin, built using Flask, leverages an OpenVINO backend to efficiently
      
      ```
      >**Note**: [Raise access request](https://www.llama.com/llama-downloads) for Llama models as it is a gated repository.
+     
 
 6. In code.py present in the backend folder, around line numbers 53 and 55 (or wherever the model paths are referenced), update the code to explicitly set the paths to your local model files.Replace **"Path to ov_llama_2 folder"/ "Path to ov_qwen7b folder"** with the actual path to your model folder on your local machine.Ensure proper file permissions so the script can access the model files.
+
+
+
 7. **Load the Extension:**
    - To load an unpacked extension in developer mode:
         - Go to the Extensions page by entering **chrome://extensions** in a new tab. (By design chrome:// URLs are not linkable.)
@@ -64,11 +72,14 @@ A Chrome plugin, built using Flask, leverages an OpenVINO backend to efficiently
      <img width="389" alt="image" src="https://github.com/user-attachments/assets/c276f522-6f03-4aac-91ff-d38faf8c1f67">
      
 
+
 8. **Pin the Extension:**
 
    Pin your extension to the toolbar to quickly access your extension.
    
    <img width="389" alt="image" src="https://github.com/user-attachments/assets/1bcc1571-b2d6-4ece-a3ca-c435733436b5">
+   
+
    
 
 ## Sample Structure
