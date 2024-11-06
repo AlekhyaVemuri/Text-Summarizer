@@ -65,7 +65,7 @@ A Chrome plugin, built using Flask, leverages an OpenVINO backend to efficiently
      
 
 8. **Pin the Extension:**
-
+   Pin your extension to the toolbar to quickly access your extension.
    ![image](https://github.com/user-attachments/assets/644bfba2-aea4-44db-9b19-b356fec2551d)
 
 
