@@ -51,7 +51,7 @@ A Chrome plugin, built using Flask, leverages an OpenVINO backend to efficiently
      ```
      >**Note**: [Raise access request](https://www.llama.com/llama-downloads) for Llama models as it is a gated repository.
 
-6. In code.py, around line numbers 53 and 55 (or wherever the model paths are referenced), update the code to explicitly set the paths to your local model files.Replace **"Path to ov_llama_2 folder"/ "Path to ov_qwen7b folder"** with the actual path to your model folder on your local machine.Ensure proper file permissions so the script can access the model files.
+6. In code.py present in the backend folder, around line numbers 53 and 55 (or wherever the model paths are referenced), update the code to explicitly set the paths to your local model files.Replace **"Path to ov_llama_2 folder"/ "Path to ov_qwen7b folder"** with the actual path to your model folder on your local machine.Ensure proper file permissions so the script can access the model files.
 
 
 8. **Load the Extension:**
