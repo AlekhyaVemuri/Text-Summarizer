@@ -52,14 +52,19 @@ A Chrome plugin, built using Flask, leverages an OpenVINO backend to efficiently
      >**Note**: [Raise access request](https://www.llama.com/llama-downloads) for Llama models as it is a gated repository.
 
 6. In code.py present in the backend folder, around line numbers 53 and 55 (or wherever the model paths are referenced), update the code to explicitly set the paths to your local model files.Replace **"Path to ov_llama_2 folder"/ "Path to ov_qwen7b folder"** with the actual path to your model folder on your local machine.Ensure proper file permissions so the script can access the model files.
-
-
-
-8. **Load the Extension:**
-   - In Chrome Developer mode, use the "Load Unpacked Extension" option to add the plugin. Refer to [Chrome’s development documentation](https://developer.chrome.com/docs/extensions/get-started/tutorial/hello-world#load-unpacked) for further details.
+7. **Load the Extension:**
+   - To load an unpacked extension in developer mode:
+        - Go to the Extensions page by entering **chrome://extensions** in a new tab. (By design chrome:// URLs are not linkable.)
+             - Alternatively, **click the Extensions menu puzzle button and select Manage Extensions** at the bottom of the menu.
+             - Or, click the Chrome menu, hover over More Tools, then select Extensions.
+        - Enable **Developer Mode** by clicking the toggle switch next to Developer mode.
+        - Click the **Load unpacked** button and select the extension directory.
+        - Refer to [Chrome’s development documentation](https://developer.chrome.com/docs/extensions/get-started/tutorial/hello-world#load-unpacked) for further details.
      
-     <img width="308" alt="image" src="https://github.com/user-attachments/assets/99a95942-93ea-4ec4-9ea8-6c10bcb98235">
-9. **Pin the Extension:**
+     <img width="389" alt="image" src="https://github.com/user-attachments/assets/c276f522-6f03-4aac-91ff-d38faf8c1f67">
+     
+
+8. **Pin the Extension:**
 
    ![image](https://github.com/user-attachments/assets/644bfba2-aea4-44db-9b19-b356fec2551d)
 
