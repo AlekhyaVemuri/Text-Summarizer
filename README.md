@@ -54,14 +54,14 @@ A Chrome plugin, built using Flask, leverages an OpenVINO backend to efficiently
 6. In code.py present in the backend folder, around line numbers 53 and 55 (or wherever the model paths are referenced), update the code to explicitly set the paths to your local model files.Replace **"Path to ov_llama_2 folder"/ "Path to ov_qwen7b folder"** with the actual path to your model folder on your local machine.Ensure proper file permissions so the script can access the model files.
 
 
+
 8. **Load the Extension:**
    - In Chrome Developer mode, use the "Load Unpacked Extension" option to add the plugin. Refer to [Chrome’s development documentation](https://developer.chrome.com/docs/extensions/get-started/tutorial/hello-world#load-unpacked) for further details.
      
      <img width="308" alt="image" src="https://github.com/user-attachments/assets/99a95942-93ea-4ec4-9ea8-6c10bcb98235">
 9. **Pin the Extension:**
 
-   <img width="245" alt="image" src="https://github.com/user-attachments/assets/9ed9a0de-56da-4e5b-a5f0-41297e06b8a7">
-
+   ![image](https://github.com/user-attachments/assets/644bfba2-aea4-44db-9b19-b356fec2551d)
 
 
 ## Sample Structure
