@@ -7,6 +7,7 @@ A Chrome plugin, built using Flask, leverages an OpenVINO backend to efficiently
 1. **Install the below necessary tools/packages:**
    - [Git on Windows](https://git-scm.com/downloads)
    - [Miniforge](https://conda-forge.org/download/)
+   - [Google Chrome for Windows](https://www.google.com/chrome/?brand=OZZY&ds_kid=43700080794581137&gad_source=1&gclid=Cj0KCQiAoae5BhCNARIsADVLzZdwNNB5nIyjZ8OyCzg6h_cCig1eoaYquUSEd7BAigJhTzps1Kxuop8aArE6EALw_wcB&gclsrc=aw.ds)
 
 2. **Clone the Repository**
    ```
@@ -49,13 +50,15 @@ A Chrome plugin, built using Flask, leverages an OpenVINO backend to efficiently
      
      ```
      >**Note**: [Raise access request](https://www.llama.com/llama-downloads) for Llama models as it is a gated repository.
-6. **Add appropriate model path**
 
-7. **Load the Extension:**
+6. In code.py, around line numbers 53 and 55 (or wherever the model paths are referenced), update the code to explicitly set the paths to your local model files.Replace **"Path to ov_llama_2 folder"/ "Path to ov_qwen7b folder"** with the actual path to your model folder on your local machine.Ensure proper file permissions so the script can access the model files.
+
+
+8. **Load the Extension:**
    - In Chrome Developer mode, use the "Load Unpacked Extension" option to add the plugin. Refer to [Chrome’s development documentation](https://developer.chrome.com/docs/extensions/get-started/tutorial/hello-world#load-unpacked) for further details.
      
      <img width="308" alt="image" src="https://github.com/user-attachments/assets/99a95942-93ea-4ec4-9ea8-6c10bcb98235">
-8. **Pin the Extension:**
+9. **Pin the Extension:**
 
    <img width="245" alt="image" src="https://github.com/user-attachments/assets/9ed9a0de-56da-4e5b-a5f0-41297e06b8a7">
 
