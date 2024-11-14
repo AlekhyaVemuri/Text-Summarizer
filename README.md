@@ -54,6 +54,7 @@ A Chrome plugin, built using Flask, leverages an OpenVINO backend to efficiently
      
      ```
      >**Note**: [Raise access request](https://www.llama.com/llama-downloads) for Llama models as it is a gated repository.
+
      
 
 7. **Load the Extension:**
