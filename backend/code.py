@@ -32,8 +32,9 @@ def pre_processing(loader):
     """
     try:
         page_data = loader.load()
-        text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=20)
+        text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=20)
         all_splits = text_splitter.split_documents(page_data)
+        # yield "Creating embeddings..."
         embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2")
         global vectorstore
         vectorstore = Chroma.from_documents(documents=all_splits, embedding=embeddings)  
@@ -59,7 +60,7 @@ def load_llm(model_id):
                 "text-generation",
                 model=model,
                 tokenizer=tokenizer,
-                max_new_tokens=4000,  
+                max_new_tokens=8192,  
                 device=model.device
             )
             global llm_model 
@@ -91,7 +92,7 @@ def web_out(urls):
             return_source_documents=False,
         )
         
-        question = "Please summarize the context in one paragraph of 100 words"
+        question = "Please summarize the entire book in one paragraph of 100 words"
         summary = qa_chain({'query': question})
         response = summary['result']
         summary_start = response.find("CONCISE SUMMARY:")
@@ -149,7 +150,7 @@ def pdf_out(pdf):
             chain_type_kwargs={"prompt": prompt},
             return_source_documents=False,
         )
-        question = "Please summarize the context in one paragraph of 60 words"
+        question = "Please summarize the entire book in 100 words."
         summary = reduce_chain({'query': question})
 
         response = summary['result']
@@ -181,7 +182,6 @@ def pdf_query(query):
         response = summary['result']
         summary_start = response.find("Helpful Answer:")
         concise_summary = response[summary_start + len("Helpful Answer:"):].strip()
-        print(concise_summary)
         return concise_summary
     except Exception as e:
         print(f"Error in PDF Summarizer QA BoT: {e}")
