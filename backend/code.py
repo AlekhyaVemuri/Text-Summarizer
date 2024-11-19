@@ -93,10 +93,11 @@ def web_out(urls):
         )
         
         question = "Please summarize the entire book in one paragraph of 100 words"
-        summary = qa_chain({'query': question})
+        summary = qa_chain(question)
         response = summary['result']
         summary_start = response.find("CONCISE SUMMARY:")
         concise_summary = response[summary_start + len("CONCISE SUMMARY:"):].strip()
+        print(response)
         return concise_summary
     except Exception as e:
         print(f"Failed to summarize webpage \n Error: {e}")
