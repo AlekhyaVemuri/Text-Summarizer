@@ -60,7 +60,7 @@ def load_llm(model_id):
                 "text-generation",
                 model=model,
                 tokenizer=tokenizer,
-                max_new_tokens=8192,  
+                max_new_tokens=4000,  
                 device=model.device
             )
             global llm_model 
@@ -97,7 +97,6 @@ def web_out(urls):
         response = summary['result']
         summary_start = response.find("CONCISE SUMMARY:")
         concise_summary = response[summary_start + len("CONCISE SUMMARY:"):].strip()
-        print(response)
         return concise_summary
     except Exception as e:
         print(f"Failed to summarize webpage \n Error: {e}")
