@@ -48,7 +48,7 @@ The directory contains:
 
      
 ## Next Steps
-Below are the steps to run the plugin from Jupyter Notebook or Terminal.
+Below are the steps to run the plugin from Jupyter Notebook **OR** Terminal.
 
 ### **Steps to follow via Jupyter Notebook:**
 1. Open Jupyter Notebook & run the cells:
