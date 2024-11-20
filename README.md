@@ -2,6 +2,12 @@
 
 A Chrome plugin, built using Flask, leverages an OpenVINO backend to efficiently summarize any webpage via a URL or any PDF via an upload. The plugin utilizes Langchain tools for tasks such as text splitting and managing a vectorstore.
 
+## Sample Structure
+
+The directory contains:
+- **backend:** Includes `code.py` and `server.py` for processing text from webpages or PDFs and managing Flask-related operations.
+- **extension:** Contains `manifest.json` for the Chrome extension along with `popup.html`, `popup.js`, and `style.css` for the user interface.
+
 ## Prerequisites
 
 1. **Install the below necessary tools/packages:**
@@ -34,12 +40,29 @@ A Chrome plugin, built using Flask, leverages an OpenVINO backend to efficiently
      ```
      pip install -r requirements.txt
      ```
+     ```
+     python -m ipykernel install --user --name=summarizer_plugin
+     ```
      
      >**Note**: Run your terminal as admin to avoid any permission issues.
 
      
+## Next Steps
+Below are the steps to run the plugin from Jupyter Notebook **OR** Terminal.
 
-5. **Download and Convert the Huggingface Model to OpenVINO IR Format:**
+### **Steps to follow via Jupyter Notebook:**
+Once the environment is created, we can run the plugin via [TextSummarizerPlugin.ipynb](https://github.com/AlekhyaVemuri/Text-Summarizer/blob/OpenVINO-backend/backend/TextSummarizerPlugin.ipynb). Please follow the below steps to open the jupyter notebook:
+1. Open Jupyter Notebook & run the cells:
+   ```
+   cd Text-Summarizer\backend
+   ```
+   ```
+   jupyter notebook
+   ```
+2. Select the **summarizer_plugin** kernel.
+
+### Steps to follow via Terminal:
+1. **Download and Convert the Huggingface Model to OpenVINO IR Format:**
    - Log in to Huggingface:
      ```
      huggingface-cli login
@@ -57,7 +80,7 @@ A Chrome plugin, built using Flask, leverages an OpenVINO backend to efficiently
 
      
 
-7. **Load the Extension:**
+2. **Load the Extension:**
    - To load an unpacked extension in developer mode:
         - Go to the Extensions page by entering **chrome://extensions** in a new tab. (By design chrome:// URLs are not linkable.)
              - Alternatively, **click the Extensions menu puzzle button and select Manage Extensions** at the bottom of the menu.
@@ -70,22 +93,16 @@ A Chrome plugin, built using Flask, leverages an OpenVINO backend to efficiently
      
 
 
-8. **Pin the Extension:**
+3. **Pin the Extension:**
 
    Pin your extension to the toolbar to quickly access your extension.
    
    <img width="389" alt="image" src="https://github.com/user-attachments/assets/1bcc1571-b2d6-4ece-a3ca-c435733436b5">
    
 
-   
 
-## Sample Structure
 
-The directory contains:
-- **backend:** Includes `code.py` and `server.py` for processing text from webpages or PDFs and managing Flask-related operations.
-- **extension:** Contains `manifest.json` for the Chrome extension along with `popup.html`, `popup.js`, and `style.css` for the user interface.
-
-## Steps to Run the Plugin
+#### Steps to Run the Plugin
 
 1. **Start the Flask Server:**
    - Navigate to the backend folder:
