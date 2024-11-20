@@ -29,7 +29,7 @@ A Chrome plugin, built using Flask, leverages an OpenVINO backend to efficiently
 4. **Install Dependencies:**
    - Execute:
      ```
-     cd Text-Summarizer-OpenVINO-backend
+     cd Text-Summarizer
      ```
      ```
      pip install -r requirements.txt
