@@ -51,6 +51,7 @@ The directory contains:
 Below are the steps to run the plugin from Jupyter Notebook **OR** Terminal.
 
 ### **Steps to follow via Jupyter Notebook:**
+Once the environment is created, we can run the plugin via [TextSummarizerPlugin.ipynb](https://github.com/AlekhyaVemuri/Text-Summarizer/blob/OpenVINO-backend/backend/TextSummarizerPlugin.ipynb). Please follow the below steps to open the jupyter notebook:
 1. Open Jupyter Notebook & run the cells:
    ```
    cd Text-Summarizer\backend
@@ -58,6 +59,7 @@ Below are the steps to run the plugin from Jupyter Notebook **OR** Terminal.
    ```
    jupyter notebook
    ```
+2. Select the **summarizer_plugin** kernel.
 
 ### Steps to follow via Terminal:
 1. **Download and Convert the Huggingface Model to OpenVINO IR Format:**
