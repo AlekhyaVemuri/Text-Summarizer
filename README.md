@@ -41,7 +41,7 @@ The directory contains:
      pip install -r requirements.txt
      ```
      
-5. **Install a ipykernel to select the "summarizer_plugin" environment:**
+5. **Install an ipykernel to select the "summarizer_plugin" environment:**
      ```
      python -m ipykernel install --user --name=summarizer_plugin
      ```
