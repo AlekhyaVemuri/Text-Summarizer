@@ -42,6 +42,7 @@ The directory contains:
      ```
      ```
 5. **Install a ipykernel to select the "summarizer_plugin" environment:**
+     ```
      python -m ipykernel install --user --name=summarizer_plugin
      ```
      
