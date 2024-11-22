@@ -8,3 +8,4 @@ Bs4==0.0.2
 trl==0.12.0
 pypdf==5.1.0
 optimum[openvino,nncf]
+ipykernel==6.29.5

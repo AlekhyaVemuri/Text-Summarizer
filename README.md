@@ -40,6 +40,8 @@ The directory contains:
      ```
      pip install -r requirements.txt
      ```
+     
+5. **Install an ipykernel to select the "summarizer_plugin" environment:**
      ```
      python -m ipykernel install --user --name=summarizer_plugin
      ```
@@ -68,7 +70,7 @@ Once the environment is created, we can run the plugin via [TextSummarizerPlugin
      huggingface-cli login
      ```
    - Generate a token from Huggingface. For private or gated models, refer to [Huggingface documentation](https://huggingface.co/docs/hub/en/models-gated).
-   - Convert the model using `optimum-cli`:
+   - Convert the model using `optimum-cli`by creating a directory named **models** and saving the models inside it:
      ```
      mkdir models
      cd models
