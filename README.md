@@ -18,7 +18,7 @@ The directory contains:
 
 2. **Clone the Repository**
    ```
-   git clone -b OpenVINO-backend https://github.com/AlekhyaVemuri/Text-Summarizer.git
+   git clone -b OpenVINO-backend https://github.com/AlekhyaVemuri/Text-Summarizer-Browser-Plugin.git
    ```
 
    
